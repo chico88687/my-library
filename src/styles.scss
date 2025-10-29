@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+/* PrimeNG v19+ manages theme styles via providePrimeNG({ theme: { preset: ... } }) in app.config.ts.
+   No separate theme.css import is required or provided in @primeng/themes.
+*/
+
+/* PrimeIcons */
+@import "primeicons/primeicons.css";
+
+/* PrimeFlex */
+@import "primeflex/primeflex.css";
