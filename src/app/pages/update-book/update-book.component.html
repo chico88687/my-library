@@ -1,1 +1,35 @@
-Update Book
+<div class="p-3">
+  <div class="text-2xl font-semibold mb-3">{{ isUpdate ? 'Update Book' : 'New Book' }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="grid gap-3">
+    <!-- Title -->
+    <div class="col-12">
+      <label for="title" class="block mb-2">Title<span class="text-red-500">*</span></label>
+      <input id="title" type="text" pInputText formControlName="title" placeholder="Enter title" class="w-full" />
+      <div class="text-red-500 text-sm mt-1" *ngIf="form.get('title')?.invalid && (form.get('title')?.dirty || form.get('title')?.touched)">
+        Title is required.
+      </div>
+    </div>
+
+    <!-- Author -->
+    <div class="col-12">
+      <label for="author" class="block mb-2">Author<span class="text-red-500">*</span></label>
+      <input id="author" type="text" pInputText formControlName="author" placeholder="Enter author" class="w-full" />
+      <div class="text-red-500 text-sm mt-1" *ngIf="form.get('author')?.invalid && (form.get('author')?.dirty || form.get('author')?.touched)">
+        Author is required.
+      </div>
+    </div>
+
+    <!-- Rating -->
+    <div class="col-12">
+      <label for="rating" class="block mb-2">Rating</label>
+      <p-inputNumber inputId="rating" formControlName="rating" [min]="0" [max]="5" [step]="1" [showButtons]="true" class="w-full"></p-inputNumber>
+      <div class="text-500 text-sm mt-1">Optional, 0-5</div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="col-12 mt-2">
+      <button pButton type="submit" label="Save" [disabled]="!canSave" class="w-full"></button>
+    </div>
+  </form>
+</div>
