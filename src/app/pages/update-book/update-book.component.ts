@@ -34,17 +34,19 @@ export class UpdateBookComponent implements OnInit {
     this.form = this.fb.group({
       title: this.fb.control('', { validators: Validators.required, nonNullable: true }),
       author: this.fb.control('', { validators: Validators.required, nonNullable: true }),
-      rating: this.fb.control<number | null>(null)
+      rating: this.fb.control<number | null>(null),
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');
-    const parsedId = idParam != null ? Number(idParam) : undefined;
-    if (parsedId != null && !Number.isNaN(parsedId)) {
+    const parsedId: number | undefined = idParam === null ? undefined : Number(idParam);
+
+    if (parsedId !== undefined && !Number.isNaN(parsedId)) {
       this.isUpdate = true;
       this.bookId = parsedId;
       void this.loadBook(parsedId);
     }
   }
+
 
   private async loadBook(id: number): Promise<void> {
     const book = await this.bookService.getById(id);
