@@ -1,1 +1,32 @@
-MyBooks
+<p-table [value]="books" stripedRows [tableStyle]="{'min-width': '50rem'}">
+  <ng-template pTemplate="header">
+    <tr>
+      <th id="title" pSortableColumn="title">
+        <div class="flex items-center gap-2">
+          Title
+          <p-sortIcon field="title"></p-sortIcon>
+        </div>
+      </th>
+      <th id="author" pSortableColumn="author">
+        <div class="flex items-center gap-2">
+          Author
+          <p-sortIcon field="author"></p-sortIcon>
+        </div>
+      </th>
+      <th id="rating" pSortableColumn="rating">
+        <div class="flex items-center gap-2">
+          Rating
+          <p-sortIcon field="rating"></p-sortIcon>
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-book>
+    <tr>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+      <td>{{ book.rating }}</td>
+    </tr>
+  </ng-template>
+</p-table>

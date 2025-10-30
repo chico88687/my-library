@@ -1,11 +1,18 @@
-<p-tabs value="/dashboard">
-  <p-tablist>
-    @for(tab of tabs; track tab.route){
-      <p-tab [value]="tab.route" [routerLink]="tab.route" class="flex items-center !gap-2 text-inherit">
-        <i [class]="tab.icon"></i>
-        <span>{{ tab.label }}</span>
-      </p-tab>
-    }
-  </p-tablist>
-</p-tabs>
-<router-outlet></router-outlet>
+@if (userAlreadyCreated) {
+  <p-tabs value="/dashboard">
+    <p-tablist>
+      @for (tab of tabs; track tab.route) {
+        <p-tab [value]="tab.route" [routerLink]="tab.route" class="flex items-center !gap-2 text-inherit">
+          <i [class]="tab.icon"></i>
+          <span>{{ tab.label }}</span>
+        </p-tab>
+      }
+    </p-tablist>
+  </p-tabs>
+  <router-outlet></router-outlet>
+  <div class="footer">
+    <p>This is your footer</p>
+  </div>
+} @else {
+  <p>It looks like you haven't created your user settings yet. Please go to the settings page to get started.</p>
+}
