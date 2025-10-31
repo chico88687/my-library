@@ -2,11 +2,12 @@ import {Component, inject, OnInit} from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
 import {UserSettings} from './database/tables/user-settings';
-import {UserSettingsService} from './service/user-settings.service';
+import {UserSettingsService} from './service/database/user-settings.service';
+import {UpdateUserSettingsComponent} from './pages/update-user-settings/update-user-settings.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Tab, TabList, Tabs, RouterLink],
+  imports: [RouterOutlet, Tab, TabList, Tabs, RouterLink, UpdateUserSettingsComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

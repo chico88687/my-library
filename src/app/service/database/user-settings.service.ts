@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {DexieService} from '../database/dexie.service';
-import {UserSettings} from '../database/tables/user-settings';
+import {DexieService} from '../../database/dexie.service';
+import {UserSettings} from '../../database/tables/user-settings';
 
 @Injectable({ providedIn: 'root' })
 export class UserSettingsService {

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {DexieService} from '../database/dexie.service';
-import {WishListItem} from '../database/tables/wish-list-item';
+import {DexieService} from '../../database/dexie.service';
+import {WishListItem} from '../../database/tables/wish-list-item';
 
 @Injectable({ providedIn: 'root' })
 export class WishListItemService {

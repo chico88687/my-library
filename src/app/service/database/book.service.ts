@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {DexieService} from '../database/dexie.service';
-import {Book} from '../database/tables/book';
+import {DexieService} from '../../database/dexie.service';
+import {Book} from '../../database/tables/book';
 
 @Injectable({ providedIn: 'root' })
 export class BookService {

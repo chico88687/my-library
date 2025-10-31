@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {BookService} from '../../service/book.service';
+import {BookService} from '../../service/database/book.service';
 import {Book} from '../../database/tables/book';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputNumberModule} from 'primeng/inputnumber';
