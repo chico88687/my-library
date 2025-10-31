@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {BookService} from '../../service/book.service';
@@ -7,6 +7,7 @@ import {Book} from '../../database/tables/book';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {ButtonModule} from 'primeng/button';
+import {BookFormGroup, BookFormService} from '../../service/form/book-form.service';
 
 @Component({
   standalone: true,
@@ -15,27 +16,19 @@ import {ButtonModule} from 'primeng/button';
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule]
 })
 export class UpdateBookComponent implements OnInit {
-  form!: FormGroup<{
-    title: FormControl<string>;
-    author: FormControl<string>;
-    rating: FormControl<number | null>;
-  }>;
+  form!: BookFormGroup;
   isUpdate = false;
   private bookId?: number;
 
   constructor(
-    private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly bookService: BookService
+    private readonly bookService: BookService,
+    private readonly bookFormService: BookFormService
   ) {}
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      title: this.fb.control('', { validators: Validators.required, nonNullable: true }),
-      author: this.fb.control('', { validators: Validators.required, nonNullable: true }),
-      rating: this.fb.control<number | null>(null),
-    });
+    this.form = this.bookFormService.createBookFormGroup();
 
     const idParam = this.route.snapshot.paramMap.get('id');
     const parsedId: number | undefined = idParam === null ? undefined : Number(idParam);
@@ -51,11 +44,7 @@ export class UpdateBookComponent implements OnInit {
   private async loadBook(id: number): Promise<void> {
     const book = await this.bookService.getById(id);
     if (book) {
-      this.form.patchValue({
-        title: book.title ?? '',
-        author: book.author ?? '',
-        rating: book.rating ?? null
-      });
+      this.bookFormService.resetForm(this.form, book);
     }
   }
 
@@ -65,13 +54,17 @@ export class UpdateBookComponent implements OnInit {
 
   async save(): Promise<void> {
     if (!this.form.valid) return;
-    const { title, author, rating } = this.form.getRawValue();
+
+    const bookValue = this.bookFormService.getBook(this.form);
 
     if (this.isUpdate && this.bookId != null) {
-      const changes: Partial<Book> = { title, author, rating: rating ?? undefined };
+      // Build partial changes from current form value
+      const { id, ...rest } = bookValue as Book; // in update flow, id is number
+      const changes: Partial<Book> = { ...rest };
       await this.bookService.update(this.bookId, changes);
     } else {
-      const toAdd: Omit<Book, 'id'> = { title, author, rating: rating ?? undefined };
+      const { id, ...rest } = bookValue as any; // NewBook has id: null, strip it
+      const toAdd: Omit<Book, 'id'> = { ...rest };
       await this.bookService.add(toAdd);
     }
 

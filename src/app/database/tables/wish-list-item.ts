@@ -3,6 +3,7 @@ export interface WishListItem {
   title: string;
   author: string;
   description: string;
-  matchScore: number;
+  notes?: string;
+  categoryId?: number;
   bookId?: number;
 }

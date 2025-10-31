@@ -4,5 +4,8 @@ export interface Book {
   author: string;
   rating?: number;
   notes?: string;
+  isFavorite: boolean;
+  wasRead: boolean;
+  categoryId?: number;
   wishId?: number;
 }
