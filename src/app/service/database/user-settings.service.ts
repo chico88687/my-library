@@ -8,8 +8,9 @@ export class UserSettingsService {
   db: DexieService = inject(DexieService);
   userExists = signal(false);
 
-  constructor() {
-    this.checkUser().then(exists => this.userExists.set(exists)); // initialize on app load
+  async initialize(): Promise<void> {
+    const exists = await this.checkUser();
+    this.userExists.set(exists);
   }
 
   /** Returns the single user or undefined if not found */

@@ -58,8 +58,8 @@ export class UpdateBookComponent implements OnInit {
     const bookValue = this.bookFormService.getBook(this.form);
 
     if (this.isUpdate && this.bookId != null) {
-      // Build partial changes from current form value
-      const { id, ...rest } = bookValue as Book; // in update flow, id is number
+      // Build partial changes from the current form value
+      const { id, ...rest } = bookValue as Book; // in the update flow, id is number
       const changes: Partial<Book> = { ...rest };
       await this.bookService.update(this.bookId, changes);
     } else {
