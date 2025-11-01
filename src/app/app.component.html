@@ -1,5 +1,5 @@
-@if (userAlreadyCreated) {
-  <router-outlet></router-outlet>
+<router-outlet></router-outlet>
+@if (userSettingsService.userExists()) {
   <p-tabs value="/dashboard">
     <p-tablist>
       @for (tab of tabs; track tab.route) {
@@ -10,6 +10,4 @@
       }
     </p-tablist>
   </p-tabs>
-} @else {
-  <update-user-settings/>
 }

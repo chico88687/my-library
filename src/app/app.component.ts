@@ -1,20 +1,15 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
-import {UserSettings} from './database/tables/user-settings';
 import {UserSettingsService} from './service/database/user-settings.service';
-import {UpdateUserSettingsComponent} from './pages/update-user-settings/update-user-settings.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Tab, TabList, Tabs, RouterLink, UpdateUserSettingsComponent],
+  imports: [RouterOutlet, Tab, TabList, Tabs, RouterLink],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-
-  userSettings?: UserSettings;
-  userAlreadyCreated = false;
+export class AppComponent {
 
   tabs = [
     {route: 'my-books', label: 'My Books', icon: 'pi pi-book'},
@@ -23,16 +18,5 @@ export class AppComponent implements OnInit {
     {route: 'find-book', label: 'Find my Next Book', icon: 'pi pi-search'}
   ];
 
-  private readonly userSettingsService = inject(UserSettingsService);
-
-  ngOnInit(): void {
-    void this.loadUser();
-    if (this.userSettings?.id) {
-      this.userAlreadyCreated = true;
-    }
-  }
-
-  private async loadUser(): Promise<void> {
-    this.userSettings = await this.userSettingsService.getUser();
-  }
+  protected readonly userSettingsService = inject(UserSettingsService);
 }
