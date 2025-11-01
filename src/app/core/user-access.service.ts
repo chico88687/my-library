@@ -12,7 +12,7 @@ export class UserSettingsGuard  implements CanActivate {
   async canActivate(): Promise<boolean> {
     const hasUser = await this.userSettingsService.getUser();
     if (!hasUser) {
-      await this.router.navigate(['/update-user-settings']);
+      await this.router.navigate(['/set-up-user']);
       return false;
     }
     return true;

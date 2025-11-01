@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 import {UserSettingsGuard} from './core/user-access.service';
-import {UpdateUserSettingsComponent} from './pages/update-user-settings/update-user-settings.component';
+import {SetUpUserComponent} from './set-up-user/set-up-user.component';
 
 export const routes: Routes = [
   {
@@ -9,8 +9,8 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/pages.routes'),
   },
   {
-    path: 'update-user-settings',
-    component: UpdateUserSettingsComponent,
+    path: 'set-up-user',
+    component: SetUpUserComponent,
   },
   {
     path: '**',
