@@ -7,7 +7,13 @@ import {UpdateUserSettingsComponent} from '../shared/update-user-settings/update
 
 const routes: Routes = [
   {
-    path: 'my-books',
+    path: '',
+    redirectTo: 'my-library',
+    pathMatch: 'full',
+  },
+
+  {
+    path: 'my-library',
     component: MyLibraryComponent,
   },
   {
