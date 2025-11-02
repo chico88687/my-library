@@ -4,8 +4,8 @@
       @for (tab of tabs; track tab.route) {
         <p-tab [value]="tab.route" [routerLink]="tab.route">
           <div class="flex flex-column align-items-center gap-2">
-            <i [class]="tab.icon"></i>
-            <span class="text-xs">{{ tab.label }}</span>
+            <i class="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl" [class]="tab.icon"></i>
+            <span class="text-xs sm:text-xs md:text-xs lg:text-base xl:text-lg">{{ tab.label }}</span>
           </div>
         </p-tab>
       }

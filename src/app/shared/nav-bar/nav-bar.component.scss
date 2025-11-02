@@ -1,12 +1,28 @@
 .bottom-nav {
   // PrimeNG overrides only for this component
   ::ng-deep {
-    .p-tablist-content,
-    .p-tablist-tab-list {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      width: 100%;
+    @media (min-width: 445px) {
+      .p-tablist-content,
+      .p-tablist-tab-list {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100%;
+      }
+    }
+    /* Target screens under 420px */
+    @media (max-width: 420px) {
+      .p-tablist-tab-list {
+        gap: 0.5rem !important; /* adjust gap to be smaller */
+      }
+
+      .p-tab {
+        padding: 0.25rem 0.5rem !important; /* optional: reduce padding of tabs */
+      }
+
+      .p-tablist-content {
+        justify-content: space-around !important; /* makes them fit more evenly */
+      }
     }
   }
 }
