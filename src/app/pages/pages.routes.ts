@@ -4,6 +4,7 @@ import {UpdateBookComponent} from './update-book/update-book.component';
 import {WishListComponent} from './wish-list/wish-list.component';
 import {FindBookComponent} from './find-book/find-book.component';
 import {UpdateUserSettingsComponent} from '../shared/update-user-settings/update-user-settings.component';
+import {CategoryListComponent} from './category-list/category-list.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'wish-list',
     component: WishListComponent,
+  },
+  {
+    path: 'category-list',
+    component: CategoryListComponent
   },
   {
     path: 'find-book',
