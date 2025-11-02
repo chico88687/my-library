@@ -1,21 +1,15 @@
-<div class="flex flex-column min-h-screen">
-  <main class="flex-grow-1">
-    <router-outlet></router-outlet>
-  </main>
+<router-outlet></router-outlet>
 
-  @if (userSettingsService.userExists()) {
-    <footer class="mt-auto">
-      <p-tabs value="/dashboard" class="w-full">
-        <p-tablist class="w-full flex justify-evenly">
-          @for (tab of tabs; track tab.route) {
-            <p-tab [value]="tab.route" [routerLink]="tab.route"
-                   class="flex items-center justify-center !gap-2 text-inherit">
-              <i [class]="tab.icon"></i>
-              <span>{{ tab.label }}</span>
-            </p-tab>
-          }
-        </p-tablist>
-      </p-tabs>
-    </footer>
-  }
-</div>
+@if (userSettingsService.userExists()) {
+  <p-tabs value="/dashboard" class="w-full">
+    <p-tablist class="w-full flex justify-evenly">
+      @for (tab of tabs; track tab.route) {
+        <p-tab [value]="tab.route" [routerLink]="tab.route"
+               class="flex items-center justify-center !gap-2 text-inherit">
+          <i [class]="tab.icon"></i>
+          <span>{{ tab.label }}</span>
+        </p-tab>
+      }
+    </p-tablist>
+  </p-tabs>
+}
