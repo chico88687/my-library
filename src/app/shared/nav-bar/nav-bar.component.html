@@ -1,11 +1,12 @@
 <div class="fixed bottom-0 left-0 w-full bg-surface-0 border-t border-surface-200 z-50 bottom-nav">
   <p-tabs class="w-full">
-    <p-tablist class="flex justify-center items-center gap-6 py-2">
+    <p-tablist class="flex justify-center items-center gap-6">
       @for (tab of tabs; track tab.route) {
-        <p-tab [value]="tab.route" [routerLink]="tab.route"
-               class="flex flex-col items-center justify-center text-inherit">
-          <i [class]="tab.icon"></i>
-          <span class="text-xs">{{ tab.label }}</span>
+        <p-tab [value]="tab.route" [routerLink]="tab.route">
+          <div class="flex flex-column align-items-center gap-2">
+            <i [class]="tab.icon"></i>
+            <span class="text-xs">{{ tab.label }}</span>
+          </div>
         </p-tab>
       }
     </p-tablist>
