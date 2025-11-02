@@ -13,11 +13,12 @@
     /* Target screens under 420px */
     @media (max-width: 420px) {
       .p-tablist-tab-list {
-        gap: 0.5rem !important; /* adjust gap to be smaller */
+        gap: 0.7rem !important; /* adjust gap to be smaller */
+        justify-content: center !important;
       }
 
       .p-tab {
-        padding: 0.25rem 0.5rem !important; /* optional: reduce padding of tabs */
+        padding: 0.2rem 0.3rem !important; /* optional: reduce padding of tabs */
       }
 
       .p-tablist-content {
