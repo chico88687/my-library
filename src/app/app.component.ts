@@ -12,7 +12,7 @@ import {UserSettingsService} from './service/database/user-settings.service';
 export class AppComponent implements OnInit {
 
   tabs = [
-    {route: 'my-library', label: 'My Books', icon: 'pi pi-book'},
+    {route: 'my-library', label: 'My Library', icon: 'pi pi-book'},
     {route: 'new-book', label: 'Add a Book', icon: 'pi pi-plus'},
     {route: 'wish-list', label: 'My Wish List', icon: 'pi pi-list'},
     {route: 'find-book', label: 'Find my Next Book', icon: 'pi pi-search'}
