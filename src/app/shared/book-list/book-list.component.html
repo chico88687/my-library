@@ -1,32 +1,72 @@
-<p-table [value]="books" stripedRows [tableStyle]="{'min-width': '50rem'}">
-  <ng-template pTemplate="header">
-    <tr>
-      <th id="title" pSortableColumn="title">
-        <div class="flex items-center gap-2">
-          Title
-          <p-sortIcon field="title"></p-sortIcon>
-        </div>
-      </th>
-      <th id="author" pSortableColumn="author">
-        <div class="flex items-center gap-2">
-          Author
-          <p-sortIcon field="author"></p-sortIcon>
-        </div>
-      </th>
-      <th id="rating" pSortableColumn="rating">
-        <div class="flex items-center gap-2">
-          Rating
-          <p-sortIcon field="rating"></p-sortIcon>
-        </div>
-      </th>
-    </tr>
-  </ng-template>
+<!--@if (true) {-->
+<!--  <p-table [value]="books" stripedRows [tableStyle]="{'min-width': '50rem'}">-->
+<!--    <ng-template pTemplate="header">-->
+<!--      <tr>-->
+<!--        <th id="title" pSortableColumn="title">-->
+<!--          <div class="flex items-center gap-2">-->
+<!--            Title-->
+<!--            <p-sortIcon field="title"></p-sortIcon>-->
+<!--          </div>-->
+<!--        </th>-->
+<!--        <th id="author" pSortableColumn="author">-->
+<!--          <div class="flex items-center gap-2">-->
+<!--            Author-->
+<!--            <p-sortIcon field="author"></p-sortIcon>-->
+<!--          </div>-->
+<!--        </th>-->
+<!--        <th id="rating" pSortableColumn="rating">-->
+<!--          <div class="flex items-center gap-2">-->
+<!--            Rating-->
+<!--            <p-sortIcon field="rating"></p-sortIcon>-->
+<!--          </div>-->
+<!--        </th>-->
+<!--      </tr>-->
+<!--    </ng-template>-->
 
-  <ng-template pTemplate="body" let-book>
-    <tr>
-      <td>{{ book.title }}</td>
-      <td>{{ book.author }}</td>
-      <td>{{ book.rating }}</td>
-    </tr>
+<!--    <ng-template pTemplate="body" let-book>-->
+<!--      <tr>-->
+<!--        <td>{{ book.title }}</td>-->
+<!--        <td>{{ book.author }}</td>-->
+<!--        <td>{{ book.rating }}</td>-->
+<!--      </tr>-->
+<!--    </ng-template>-->
+<!--  </p-table>-->
+<!--}-->
+<p-dataView #dv [value]="books" >
+  <ng-template #list let-books>
+    @for (book of books; track book.id) {
+<!--      <p-card class="mb-4" styleClass="background-color: orange; color: white;">-->
+<!--        <book-avatar/>-->
+<!--        <p>{{ book.title }}</p>-->
+<!--      </p-card>-->
+      <div class="mb-4">
+        <div class="p-card p-3" style="background-color: #222225;">
+          <div class="p-grid">
+            <div class="p-col-12 p-md-6">
+              <!-- NEW: Flex container for left and right sides -->
+              <div class="flex justify-content-between align-items-center">
+                <!-- Left-->
+                <div class="flex justify-content-start align-items-center">
+                  <book-avatar/>
+                  <div>
+                    <p>{{ book.title }}</p>
+                    <p>{{ book.author }}</p>
+                  </div>
+                </div>
+                <!-- Right-->
+                <div class="flex flex-column align-items-center">
+
+                </div>
+              </div>
+              <div class="p-col-12 p-md-6 mb-2">
+                @if (book.rating) {
+                  <p-rating [ngModel]="book.rating" [disabled]="true"/>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
   </ng-template>
-</p-table>
+</p-dataView>
