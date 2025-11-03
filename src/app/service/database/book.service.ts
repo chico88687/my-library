@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DexieService} from '../../database/dexie.service';
 import {Book} from '../../database/tables/book';
+import {AlertService} from '../alert/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
-  constructor(private readonly db: DexieService) {}
+
+  private readonly db: DexieService = inject(DexieService);
+  private readonly alertService = inject(AlertService);
 
   getAll() {
     return this.db.books.toArray();
@@ -15,7 +18,9 @@ export class BookService {
   }
 
   add(book: Omit<Book, 'id'>) {
-    return this.db.books.add(book);
+    const added = this.db.books.add(book);
+    this.alertService.addAlert('success', 'Book Added', 'Book added successfully');
+    return added;
   }
 
   update(id: number, changes: Partial<Book>) {
