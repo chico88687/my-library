@@ -32,41 +32,40 @@
 <!--    </ng-template>-->
 <!--  </p-table>-->
 <!--}-->
-<p-dataView #dv [value]="books" >
-  <ng-template #list let-books>
-    @for (book of books; track book.id) {
-<!--      <p-card class="mb-4" styleClass="background-color: orange; color: white;">-->
-<!--        <book-avatar/>-->
-<!--        <p>{{ book.title }}</p>-->
-<!--      </p-card>-->
-      <div class="mb-4">
-        <div class="p-card p-3" style="background-color: #222225;">
-          <div class="p-grid">
-            <div class="p-col-12 p-md-6">
-              <!-- NEW: Flex container for left and right sides -->
-              <div class="flex justify-content-between align-items-center">
-                <!-- Left-->
-                <div class="flex justify-content-start align-items-center">
-                  <book-avatar/>
-                  <div>
-                    <p>{{ book.title }}</p>
-                    <p>{{ book.author }}</p>
+
+<div class="pb-4">
+  <p-dataView [value]="books">
+    <ng-template #list let-books>
+      @for (book of books; track book.id) {
+        <div class="mb-4">
+          <div class="p-card p-1" style="background-color: #222225; border-radius: 8px; width: 100%;">
+            <div class="p-grid">
+              <div class="p-col-12 p-md-6">
+                <!-- NEW: Flex container for left and right sides -->
+                <div class="flex justify-content-between align-items-center">
+                  <!-- Left-->
+                  <div class="flex justify-content-start align-items-center">
+                    <book-avatar/>
+                    <div>
+                      <p>{{ book.title }}</p>
+                      <p>{{ book.author }}</p>
+                    </div>
+                  </div>
+                  <!-- Right-->
+                  <div class="flex flex-column align-items-center">
+
                   </div>
                 </div>
-                <!-- Right-->
-                <div class="flex flex-column align-items-center">
-
+                <div class="p-col-12 p-md-6 mb-2">
+                  @if (book.rating) {
+                    <p-rating [ngModel]="book.rating" [disabled]="true"/>
+                  }
                 </div>
-              </div>
-              <div class="p-col-12 p-md-6 mb-2">
-                @if (book.rating) {
-                  <p-rating [ngModel]="book.rating" [disabled]="true"/>
-                }
               </div>
             </div>
           </div>
         </div>
-      </div>
-    }
-  </ng-template>
-</p-dataView>
+      }
+    </ng-template>
+  </p-dataView>
+</div>

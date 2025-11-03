@@ -1,1 +1,18 @@
+<div class="p-card mb-3 p-3" style="background-color: #222225; border-radius: 8px;">
+  <div class="p-grid">
+    <div class="p-col-12 p-md-6">
+      <!-- NEW: Flex container for left and right sides -->
+      <div class="flex justify-content-between align-items-center">
+        <!-- Left-->
+        <div class="flex justify-content-start align-items-center">
+
+        </div>
+        <!-- Right-->
+        <div class="flex flex-column align-items-center">
+          <p-button size="small" label="Add Book" [outlined]="true" [routerLink]="'/new-book'"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <book-list [books]="books"/>
