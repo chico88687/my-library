@@ -6,7 +6,7 @@ import {AlertComponent} from './shared/alert/alert.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavBarComponent, AlertComponent],
+  imports: [RouterOutlet, NavBarComponent, AlertComponent, AlertComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

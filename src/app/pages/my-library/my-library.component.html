@@ -15,4 +15,4 @@
     </div>
   </div>
 </div>
-<book-list [books]="books"/>
+<book-list [books]="books" (changeFavoriteEmitter)="changeFavorite($event)"/>

@@ -25,4 +25,8 @@ export class MyLibraryComponent implements OnInit {
   loadBooks(): void {
     this.bookService.getAll().then(books => this.books = books);
   }
+
+  protected changeFavorite($event: number) {
+    void this.bookService.changeFavorite($event);
+  }
 }

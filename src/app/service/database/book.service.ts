@@ -3,7 +3,7 @@ import {DexieService} from '../../database/dexie.service';
 import {Book} from '../../database/tables/book';
 import {AlertService} from '../alert/alert.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class BookService {
 
   private readonly db: DexieService = inject(DexieService);
@@ -25,6 +25,17 @@ export class BookService {
 
   update(id: number, changes: Partial<Book>) {
     return this.db.books.update(id, changes);
+  }
+
+  async changeFavorite(id: number) {
+    const current = await this.db.books.get(id);
+    if (!current) {
+      throw new Error('Book not found');
+    }
+    const updated = await this.db.books.update(id, {isFavorite: !current.isFavorite});
+    const message = current.title + ' is now ' + (current.isFavorite ? 'not' : '') + ' a favorite';
+    this.alertService.addAlert('secondary', message);
+    return updated;
   }
 
   delete(id: number) {
