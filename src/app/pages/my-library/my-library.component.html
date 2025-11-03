@@ -9,11 +9,16 @@
         </div>
         <!-- Right-->
         <div class="flex flex-column align-items-center">
-          <p-button size="small" label="Add Book" [outlined]="true" [routerLink]="'/new-book'"/>
+          <sort-menu [fieldAndLabelMap]="fieldAndLabelSortMap" [sortState]="sortState" (sortOrderEmitter)="sortBooks($event)"/>
+          <p-button size="small" icon="pi pi-plus" [outlined]="true" [routerLink]="'/new-book'"/>
         </div>
       </div>
     </div>
   </div>
 </div>
-<book-list [books]="books" (changeFavoriteEmitter)="changeFavorite($event)" (deleteBookEmitter)="deleteBook($event)"/>
+<book-list [books]="books"
+           (changeFavoriteEmitter)="changeFavorite($event)"
+           (deleteBookEmitter)="deleteBook($event)"
+           (updateRatingEmitter)="updateRating($event)"
+/>
 <p-confirmDialog [position]="'bottom'"/>

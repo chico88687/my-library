@@ -1,38 +1,3 @@
-<!--@if (true) {-->
-<!--  <p-table [value]="books" stripedRows [tableStyle]="{'min-width': '50rem'}">-->
-<!--    <ng-template pTemplate="header">-->
-<!--      <tr>-->
-<!--        <th id="title" pSortableColumn="title">-->
-<!--          <div class="flex items-center gap-2">-->
-<!--            Title-->
-<!--            <p-sortIcon field="title"></p-sortIcon>-->
-<!--          </div>-->
-<!--        </th>-->
-<!--        <th id="author" pSortableColumn="author">-->
-<!--          <div class="flex items-center gap-2">-->
-<!--            Author-->
-<!--            <p-sortIcon field="author"></p-sortIcon>-->
-<!--          </div>-->
-<!--        </th>-->
-<!--        <th id="rating" pSortableColumn="rating">-->
-<!--          <div class="flex items-center gap-2">-->
-<!--            Rating-->
-<!--            <p-sortIcon field="rating"></p-sortIcon>-->
-<!--          </div>-->
-<!--        </th>-->
-<!--      </tr>-->
-<!--    </ng-template>-->
-
-<!--    <ng-template pTemplate="body" let-book>-->
-<!--      <tr>-->
-<!--        <td>{{ book.title }}</td>-->
-<!--        <td>{{ book.author }}</td>-->
-<!--        <td>{{ book.rating }}</td>-->
-<!--      </tr>-->
-<!--    </ng-template>-->
-<!--  </p-table>-->
-<!--}-->
-
 <div class="pb-4">
   <p-dataView [value]="books">
     <ng-template #list let-books>
@@ -44,19 +9,32 @@
                 <!-- NEW: Flex container for left and right sides -->
                 <div class="flex justify-content-between align-items-center">
                   <!-- Left-->
-                  <div class="flex justify-content-start align-items-center">
+                  <div class="flex align-items-center">
                     <book-avatar/>
-                    <div>
-                      <p>{{ book.title }}</p>
-                      <p>{{ book.author }}</p>
+                    <div class="flex flex-column justify-content-center ml-2">
+                      <span class="font-normal text-base md:text-lg lg:text-xl xl:text-2xl">
+                        {{ book.title }}
+                      </span>
+                      <span class="font-normal text-xs md:text-base lg:text-lg xl:text-xl">
+                        {{ book.author }}
+                      </span>
+                      @if (book.rating) {
+                        <p-rating [ngModel]="book.rating" [disabled]="disableRating" (onRate)="changeRating(book, $event)"/>
+                      }
                     </div>
                   </div>
+
                   <!-- Right-->
                   <div class="flex flex-column align-items-center mt-2">
                     @if (true) {
-                      <p-button class="mb-2" severity="danger" icon="pi pi-heart" [outlined]="true" [rounded]="true"
-                                [text]="true"
-                                (onClick)="changeFavorite(book.id)"/>
+                      <p-button
+                        class="mb-2"
+                        [severity]="book.isFavorite ? 'danger' : 'secondary'"
+                        [icon]="!book.isFavorite ? 'pi pi-heart' : 'pi pi-heart-fill'"
+                        [text]="true"
+                        [rounded]="true"
+                        (onClick)="changeFavorite(book.id)">
+                      </p-button>
                       <p-button size="small" class="mb-2" severity="secondary" icon="pi pi-pencil" [outlined]="true"
                                 [rounded]="true" [routerLink]="'/update-book/' + book.id"/>
                       <p-button size="small" severity="secondary" icon="pi pi-trash" [outlined]="true"
@@ -64,11 +42,6 @@
                     }
                   </div>
                 </div>
-                @if (book.rating) {
-                  <div class="p-col-12 p-md-6 mb-2">
-                    <p-rating [ngModel]="book.rating" [disabled]="true"/>
-                  </div>
-                }
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ export class BookService {
   private readonly db: DexieService = inject(DexieService);
   private readonly alertService = inject(AlertService);
 
-  getAll() {
+  async getAll(): Promise<Book[]> {
     return this.db.books.toArray();
   }
 
@@ -35,10 +35,10 @@ export class BookService {
     return updatedBook;
   }
 
-  async changeFavorite(id: number): Promise<number> {
+  async updateFavorite(id: number): Promise<number> {
     const current = await this.getById(id);
     const newFavoriteStatus = !current.isFavorite;
-    const updated = await this.db.books.update(id, { isFavorite: newFavoriteStatus });
+    const updated = await this.db.books.update(id, {isFavorite: newFavoriteStatus});
 
     const message = `${current.title} is ${newFavoriteStatus ? 'now a favorite' : 'no longer a favorite'}`;
     this.alertService.addAlert('secondary', message);
@@ -46,6 +46,15 @@ export class BookService {
     return updated;
   }
 
+  async updateRating(id: number, rating: number): Promise<number> {
+    const current = await this.getById(id);
+    const updated = await this.db.books.update(id, {rating});
+
+    const message = `${current.title} has been rated ${rating} stars`;
+    this.alertService.addAlert('secondary', message);
+
+    return updated;
+  }
 
   async delete(book: Book): Promise<void> {
     await this.db.books.delete(book.id!);
