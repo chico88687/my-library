@@ -1,16 +1,13 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {Toast} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
 
 @Component({
   standalone: true,
   selector: 'alert-component',
-  templateUrl: './alert.component.html',
+  template: '<p-toast key="alert"/>',
   imports: [
     Toast
   ],
 })
-export class AlertComponent {
-
-
-}
+export class AlertComponent {}

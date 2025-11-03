@@ -3,7 +3,6 @@ import {RouterOutlet} from '@angular/router';
 import {UserSettingsService} from './service/database/user-settings.service';
 import {NavBarComponent} from './shared/nav-bar/nav-bar.component';
 import {AlertComponent} from './shared/alert/alert.component';
-import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-root',
