@@ -7,7 +7,6 @@ import {Toast} from 'primeng/toast';
   template: `
     <p-toast
       key="alert"
-      [baseZIndex]="9999"
       [breakpoints]="{
         '435px': { width: '90%', left: '5%', right: '5%' }
       }"

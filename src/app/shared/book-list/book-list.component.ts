@@ -27,9 +27,15 @@ import {RouterLink} from '@angular/router';
 export class BookListComponent {
 
   @Input() books: Book[] = [];
+
   @Output() changeFavoriteEmitter = new EventEmitter<number>();
+  @Output() deleteBookEmitter = new EventEmitter<{ book: Book, event: Event }>();
 
   protected changeFavorite(id: number): void {
     this.changeFavoriteEmitter.emit(id);
+  }
+
+  protected deleteBook(book: Book, event: Event): void {
+    this.deleteBookEmitter.emit({ book: book, event});
   }
 }

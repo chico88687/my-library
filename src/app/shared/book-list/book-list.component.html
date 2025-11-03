@@ -52,19 +52,23 @@
                     </div>
                   </div>
                   <!-- Right-->
-                  <div class="flex flex-column align-items-center">
+                  <div class="flex flex-column align-items-center mt-2">
                     @if (true) {
-                      <p-button size="small" severity="danger" icon="pi pi-heart" [outlined]="true" [rounded]="true" (onClick)="changeFavorite(book.id)"/>
-                      <p-button size="small" severity="secondary" icon="pi pi-pencil" [outlined]="true" [rounded]="true" [routerLink]="'/update-book/' + book.id"/>
-                      <p-button size="small" severity="secondary" icon="pi pi-trash" [outlined]="true" [rounded]="true"/>
+                      <p-button class="mb-2" severity="danger" icon="pi pi-heart" [outlined]="true" [rounded]="true"
+                                [text]="true"
+                                (onClick)="changeFavorite(book.id)"/>
+                      <p-button size="small" class="mb-2" severity="secondary" icon="pi pi-pencil" [outlined]="true"
+                                [rounded]="true" [routerLink]="'/update-book/' + book.id"/>
+                      <p-button size="small" severity="secondary" icon="pi pi-trash" [outlined]="true"
+                                [rounded]="true" (onClick)="deleteBook(book, $event)"/>
                     }
                   </div>
                 </div>
-                <div class="p-col-12 p-md-6 mb-2">
-                  @if (book.rating) {
+                @if (book.rating) {
+                  <div class="p-col-12 p-md-6 mb-2">
                     <p-rating [ngModel]="book.rating" [disabled]="true"/>
-                  }
-                </div>
+                  </div>
+                }
               </div>
             </div>
           </div>

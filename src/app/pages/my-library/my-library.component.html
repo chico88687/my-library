@@ -15,4 +15,5 @@
     </div>
   </div>
 </div>
-<book-list [books]="books" (changeFavoriteEmitter)="changeFavorite($event)"/>
+<book-list [books]="books" (changeFavoriteEmitter)="changeFavorite($event)" (deleteBookEmitter)="deleteBook($event)"/>
+<p-confirmDialog [position]="'bottom'"/>

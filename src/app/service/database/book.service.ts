@@ -13,8 +13,12 @@ export class BookService {
     return this.db.books.toArray();
   }
 
-  getById(id: number) {
-    return this.db.books.get(id);
+  async getById(id: number): Promise<Book> {
+    const book = await this.db.books.get(id);
+    if (!book) {
+      throw new Error('Book not found');
+    }
+    return book;
   }
 
   add(book: Omit<Book, 'id'>) {
@@ -23,22 +27,29 @@ export class BookService {
     return added;
   }
 
-  update(id: number, changes: Partial<Book>) {
-    return this.db.books.update(id, changes);
+  async update(id: number, changes: Partial<Book>): Promise<number> {
+    const current = await this.getById(id);
+    const updatedBook = await this.db.books.update(id, changes);
+    const message = current.title + ' has been updated';
+    this.alertService.addAlert('success', message, message);
+    return updatedBook;
   }
 
-  async changeFavorite(id: number) {
-    const current = await this.db.books.get(id);
-    if (!current) {
-      throw new Error('Book not found');
-    }
-    const updated = await this.db.books.update(id, {isFavorite: !current.isFavorite});
-    const message = current.title + ' is now ' + (current.isFavorite ? 'not' : '') + ' a favorite';
+  async changeFavorite(id: number): Promise<number> {
+    const current = await this.getById(id);
+    const newFavoriteStatus = !current.isFavorite;
+    const updated = await this.db.books.update(id, { isFavorite: newFavoriteStatus });
+
+    const message = `${current.title} is ${newFavoriteStatus ? 'now a favorite' : 'no longer a favorite'}`;
     this.alertService.addAlert('secondary', message);
+
     return updated;
   }
 
-  delete(id: number) {
-    return this.db.books.delete(id);
+
+  async delete(book: Book): Promise<void> {
+    await this.db.books.delete(book.id!);
+    const message = book.title + ' has been deleted';
+    this.alertService.addAlert('secondary', 'Book', message);
   }
 }
