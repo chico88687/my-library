@@ -1,0 +1,32 @@
+<div>
+  <span class="text-2xl">Data Management</span>
+</div>
+
+@if (isLoading) {
+  <p-progress-spinner strokeWidth="8"
+                      fill="transparent"
+                      animationDuration=".5s"
+                      [style]="{ width: '50px', height: '50px' }"/>
+} @else {
+  <div class="mt-4">
+    @for (entity of entities; track entities) {
+      <div class="p-card mb-3 p-3" style="background-color: #222225; border-radius: 8px;">
+        <div class="col">
+          <span class="text-lg">{{ entity }}</span>
+        </div>
+        <div class="col">
+          <div class="flex justify-content-center gap-2">
+            <p-fileupload name="booksFile"
+                          accept=".csv,.txt"
+                          customUpload="true"
+                          (uploadHandler)="onFileSelect($event)"
+                          chooseLabel="Select CSV/TXT"
+                          maxFileSize="10485760"
+                          [auto]="true"/>
+            <p-button label="Export {{10}} {{entity}}"/>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
