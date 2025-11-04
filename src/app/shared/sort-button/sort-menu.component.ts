@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {MenuItem} from 'primeng/api';
 import {MenuModule} from 'primeng/menu';
-import {Button} from 'primeng/button';
+import {Button, ButtonSeverity} from 'primeng/button';
 import {SortOrder, SortState} from './sort-state';
 
 @Component({
@@ -13,6 +13,8 @@ import {SortOrder, SortState} from './sort-state';
 export class SortMenuComponent implements OnChanges {
   @Input() fieldAndLabelMap: Map<string, string> = new Map();
   @Input() sortState: SortState = {};
+  @Input() severity: ButtonSeverity = 'secondary';
+
   @Output() sortStateEmitter = new EventEmitter<SortState>();
 
   sortMenu: MenuItem[] = [];

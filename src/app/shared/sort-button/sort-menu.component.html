@@ -2,12 +2,13 @@
 <div class="flex align-items-center gap-1 md:gap-2 responsive-button">
   <div class="flex flex-column mb-3">
     <div class="flex justify-content-start">
-      <label for="sort_button" class="text-xs font-semibold" jhiTranslate="hof.sortMenu.label">Sorted By: </label>
+      <label for="sort_button" class="text-xs font-semibold">Sorted By: </label>
     </div>
     <p-button
       id="sort_button"
       label="{{ getButtonLabel() }}"
       [outlined]="true"
+      [severity]="severity"
       (onClick)="sortOptions.toggle($event)"
     />
   </div>
@@ -17,6 +18,7 @@
       icon="{{ getIcon() }}"
       [outlined]="true"
       [disabled]="sortState.predicate == null"
+      [severity]="severity"
       (onClick)="emitNewOrder()"
     />
   </div>
