@@ -12,7 +12,7 @@ import {ProgressSpinner} from 'primeng/progressspinner';
     Button,
     FileUpload,
     ProgressSpinner
-  ]
+  ],
 })
 export class DataManagementComponent {
 
@@ -28,9 +28,5 @@ export class DataManagementComponent {
       return;
     }
     this.importService.importBooks(file).then(() => this.isLoading = false);
-  }
-
-  protected onFileSelect($event: FileUploadHandlerEvent) {
-
   }
 }

@@ -16,12 +16,18 @@
         </div>
         <div class="col">
           <div class="flex justify-content-center gap-2">
-            <p-fileupload name="booksFile"
+<!--            <p-fileupload name="booksFile"-->
+<!--                          accept=".csv,.txt"-->
+<!--                          customUpload="true"-->
+<!--                          (onSelect)="import($event)"-->
+<!--                          chooseLabel="Select CSV/TXT"-->
+<!--                          maxFileSize="10485760"-->
+<!--                          [auto]="true"/>-->
+            <p-fileupload mode="basic"
+                          chooseIcon="pi pi-upload"
                           accept=".csv,.txt"
-                          customUpload="true"
-                          (uploadHandler)="onFileSelect($event)"
-                          chooseLabel="Select CSV/TXT"
                           maxFileSize="10485760"
+                          (onSelect)="import($event)"
                           [auto]="true"/>
             <p-button label="Export {{10}} {{entity}}"/>
           </div>

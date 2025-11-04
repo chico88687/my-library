@@ -55,12 +55,8 @@ export class BookService {
     return collection.toArray();
   }
 
-  async getById(id: number): Promise<Book> {
-    const book = await this.db.books.get(id);
-    if (!book) {
-      throw new Error('Book not found');
-    }
-    return book;
+  async getById(id: number): Promise<Book | undefined> {
+    return this.db.books.get(id);
   }
 
   add(book: Omit<Book, 'id'>) {
@@ -71,6 +67,9 @@ export class BookService {
 
   async update(id: number, changes: Partial<Book>): Promise<number> {
     const current = await this.getById(id);
+    if (!current) {
+      throw new Error('The book you are trying to update doesn\'t exist');
+    }
     const updatedBook = await this.db.books.update(id, changes);
     const message = current.title + ' has been updated';
     this.alertService.addAlert('success', message, message);
@@ -79,6 +78,9 @@ export class BookService {
 
   async updateFavorite(id: number): Promise<number> {
     const current = await this.getById(id);
+    if (!current) {
+      throw new Error('The book you are trying to update doesn\'t exist');
+    }
     const newFavoriteStatus = !current.isFavorite;
     const updated = await this.db.books.update(id, {isFavorite: newFavoriteStatus});
 
@@ -90,8 +92,10 @@ export class BookService {
 
   async updateRating(id: number, rating: number): Promise<number> {
     const current = await this.getById(id);
+    if (!current) {
+      throw new Error('The book you are trying to update doesn\'t exist');
+    }
     const updated = await this.db.books.update(id, {rating});
-
     const message = `${current.title} has been rated ${rating} stars`;
     this.alertService.addAlert('secondary', message);
 

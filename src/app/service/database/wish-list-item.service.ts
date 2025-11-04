@@ -10,7 +10,7 @@ export class WishListItemService {
     return this.db.wishListItems.toArray();
   }
 
-  getById(id: number) {
+  async getById(id: number) {
     return this.db.wishListItems.get(id);
   }
 

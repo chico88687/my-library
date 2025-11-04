@@ -13,12 +13,8 @@ export class CategoryService {
     return this.db.categories.toArray();
   }
 
-  async getById(id: number): Promise<Category> {
-    const category = await this.db.categories.get(id);
-    if (!category) {
-      throw new Error('Category not found');
-    }
-    return category;
+  async getById(id: number): Promise<Category | undefined> {
+    return this.db.categories.get(id);
   }
 
   async add(category: Omit<Category, 'id'>) {
@@ -29,6 +25,9 @@ export class CategoryService {
 
   async update(id: number, changes: Partial<Category>): Promise<number> {
     const current = await this.getById(id);
+    if (!current) {
+      throw new Error('The category you are trying to update was not found');
+    }
     const updated = await this.db.categories.update(id, changes);
     const message = `${current.name} has been updated`;
     this.alertService.addAlert('success', message);
