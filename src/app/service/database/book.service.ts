@@ -59,20 +59,24 @@ export class BookService {
     return this.db.books.get(id);
   }
 
-  add(book: Omit<Book, 'id'>) {
+  add(book: Omit<Book, 'id'>, shouldAddAlert = true) {
     const added = this.db.books.add(book);
-    this.alertService.addAlert('success', 'Book Added', 'Book added successfully');
+    if (shouldAddAlert) {
+      this.alertService.addAlert('success', 'Book Added', 'Book added successfully');
+    }
     return added;
   }
 
-  async update(id: number, changes: Partial<Book>): Promise<number> {
+  async update(id: number, changes: Partial<Book>, shouldAddAlert = true): Promise<number> {
     const current = await this.getById(id);
     if (!current) {
       throw new Error('The book you are trying to update doesn\'t exist');
     }
     const updatedBook = await this.db.books.update(id, changes);
     const message = current.title + ' has been updated';
-    this.alertService.addAlert('success', message, message);
+    if (shouldAddAlert) {
+      this.alertService.addAlert('success', message, message);
+    }
     return updatedBook;
   }
 

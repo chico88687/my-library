@@ -80,14 +80,14 @@ export class ImportService {
         if (book.id) {
           const existing = existingBooks.find(b => b.id === book.id);
           if (existing) {
-            await this.bookService.update(book.id, book);
+            await this.bookService.update(book.id, book, false);
           } else {
             const {id, ...bookData} = book;
-            await this.bookService.add(bookData);
+            await this.bookService.add(bookData, false);
           }
         } else {
           const {id, ...bookData} = book;
-          await this.bookService.add(bookData);
+          await this.bookService.add(bookData, false);
         }
       })
     );
