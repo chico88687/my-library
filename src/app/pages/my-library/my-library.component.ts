@@ -52,6 +52,16 @@ export class MyLibraryComponent implements OnInit {
     this.bookService.updateRating(bookId, rating).then(() => this.loadBooks());
   }
 
+  protected filterByFavorite(): void {
+    this.bookFilter.isFavorite = this.bookFilter.isFavorite ? undefined : true;
+    this.loadBooks();
+  }
+
+  protected filterByRead(): void {
+    this.bookFilter.wasRead = this.bookFilter.wasRead ? undefined : true;
+    this.loadBooks();
+  }
+
   protected deleteBook($bookEvent: { book: Book, event: Event }): void {
     const book = $bookEvent.book;
     const event = $bookEvent.event;
