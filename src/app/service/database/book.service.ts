@@ -2,6 +2,13 @@ import {inject, Injectable} from '@angular/core';
 import {DexieService} from '../../database/dexie.service';
 import {Book} from '../../database/tables/book';
 import {AlertService} from '../alert/alert.service';
+import {SortState} from '../../shared/sort-button/sort-state';
+
+export interface BookFilter {
+  searchTerm?: string;
+  isFavorite?: boolean;
+  wasRead?: boolean;
+}
 
 @Injectable({providedIn: 'root'})
 export class BookService {
@@ -9,8 +16,43 @@ export class BookService {
   private readonly db: DexieService = inject(DexieService);
   private readonly alertService = inject(AlertService);
 
-  async getAll(): Promise<Book[]> {
-    return this.db.books.toArray();
+  async getAll(sort?: SortState, filter?: BookFilter): Promise<Book[]> {
+    let collection = this.db.books.toCollection();
+
+    if (filter) {
+      collection = collection.filter(book => {
+        let matches = true;
+        if (filter.searchTerm) {
+          const searchTerm = filter.searchTerm.toLowerCase();
+          matches =
+            matches &&
+            (book.title.toLowerCase().includes(searchTerm) ||
+              book.author.toLowerCase().includes(searchTerm));
+        }
+
+        if (filter.isFavorite !== undefined) {
+          matches = matches && book.isFavorite === filter.isFavorite;
+        }
+
+        if (filter.wasRead !== undefined) {
+          matches = matches && book.wasRead === filter.wasRead;
+        }
+
+        return matches;
+      });
+    }
+
+    // --- Apply sorting ---
+    if (sort?.predicate) {
+      const result = await collection.sortBy(sort.predicate as keyof Book);
+      if (sort.order === 'desc') {
+        return result.reverse();
+      }
+      return result;
+    }
+
+    // Default: return unsorted collection
+    return collection.toArray();
   }
 
   async getById(id: number): Promise<Book> {

@@ -9,7 +9,7 @@
         </div>
         <!-- Right-->
         <div class="flex flex-column align-items-center">
-          <sort-menu [fieldAndLabelMap]="fieldAndLabelSortMap" [sortState]="sortState" (sortOrderEmitter)="sortBooks($event)"/>
+          <sort-menu [fieldAndLabelMap]="fieldAndLabelSortMap" [sortState]="sortState" (sortStateEmitter)="sortBooks($event)"/>
           <p-button size="small" icon="pi pi-plus" [outlined]="true" [routerLink]="'/new-book'"/>
         </div>
       </div>

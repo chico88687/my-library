@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {BookService} from '../../service/database/book.service';
+import {BookFilter, BookService} from '../../service/database/book.service';
 import {Book} from '../../database/tables/book';
 import {TableModule} from 'primeng/table';
 import {BookListComponent} from '../../shared/book-list/book-list.component';
@@ -8,6 +8,7 @@ import {RouterLink} from '@angular/router';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {SortMenuComponent} from '../../shared/sort-button/sort-menu.component';
+import {SortState} from '../../shared/sort-button/sort-state';
 
 @Component({
   standalone: true,
@@ -21,7 +22,8 @@ export class MyLibraryComponent implements OnInit {
   books: Book[] = [];
 
   fieldAndLabelSortMap: Map<string, string> = new Map()
-  sortState: { predicate?: string, order?: 'asc' | 'desc' } = {predicate: 'title', order: 'asc'};
+  sortState: SortState = {predicate: 'title', order: 'asc'};
+  bookFilter: BookFilter = {};
 
   protected readonly bookService = inject(BookService);
   protected readonly confirmationService = inject(ConfirmationService);
@@ -32,10 +34,15 @@ export class MyLibraryComponent implements OnInit {
   }
 
   loadBooks(): void {
-    this.bookService.getAll().then(books => this.books = books);
+    this.bookService.getAll(this.sortState, this.bookFilter).then(books => this.books = books);
   }
 
-  protected changeFavorite($event: number) {
+  protected sortBooks($event: SortState): void {
+    this.sortState = $event;
+    this.loadBooks();
+  }
+
+  protected changeFavorite($event: number): void {
     this.bookService.updateFavorite($event).then(() => this.loadBooks());
   }
 
