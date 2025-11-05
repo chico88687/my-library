@@ -1,52 +1,61 @@
-<div class="pb-4">
-  <p-dataView [value]="books">
-    <ng-template #list let-books>
-      @for (book of books; track book.id) {
-        <div class="mb-4">
-          <div class="p-card p-1" style="background-color: #222225; border-radius: 8px; width: 100%;">
-            <div class="p-grid">
-              <div class="p-col-12 p-md-6">
-                <!-- NEW: Flex container for left and right sides -->
-                <div class="flex justify-content-between align-items-center">
-                  <!-- Left-->
-                  <div class="flex align-items-center">
-                    <book-avatar/>
-                    <div class="flex flex-column justify-content-center ml-2">
+@if (isLoading) {
+  <div class="flex justify-content-center">
+    <p-progress-spinner strokeWidth="8"
+                        fill="transparent"
+                        animationDuration=".5s"
+                        [style]="{ width: '50px', height: '50px' }"/>
+  </div>
+} @else {
+  <div class="pb-6">
+    <p-dataView [value]="books">
+      <ng-template #list let-books>
+        @for (book of books; track book.id) {
+          <div class="mb-4">
+            <div class="p-card p-1" style="background-color: #222225; border-radius: 8px; width: 100%;">
+              <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                  <!-- NEW: Flex container for left and right sides -->
+                  <div class="flex justify-content-between align-items-center">
+                    <!-- Left-->
+                    <div class="flex align-items-center">
+                      <book-avatar/>
+                      <div class="flex flex-column justify-content-center ml-2">
                       <span class="font-normal text-base md:text-lg lg:text-xl xl:text-2xl">
                         {{ book.title }}
                       </span>
-                      <span class="font-normal text-xs md:text-base lg:text-lg xl:text-xl">
+                        <span class="font-normal text-xs md:text-base lg:text-lg xl:text-xl">
                         {{ book.author }}
                       </span>
-                      <p-rating [ngModel]="book.rating"
-                                [disabled]="disableRating"
-                                (onRate)="changeRating(book, $event)"/>
+                        <p-rating [ngModel]="book.rating"
+                                  [disabled]="disableRating"
+                                  (onRate)="changeRating(book, $event)"/>
+                      </div>
                     </div>
-                  </div>
 
-                  <!-- Right-->
-                  <div class="flex flex-column align-items-center mt-2">
-                    @if (true) {
-                      <p-button
-                        class="mb-2"
-                        [severity]="book.isFavorite ? 'danger' : 'secondary'"
-                        [icon]="!book.isFavorite ? 'pi pi-heart' : 'pi pi-heart-fill'"
-                        [text]="true"
-                        [rounded]="true"
-                        (onClick)="changeFavorite(book.id)">
-                      </p-button>
-                      <p-button size="small" class="mb-2" severity="secondary" icon="pi pi-pencil" [outlined]="true"
-                                [rounded]="true" [routerLink]="'/update-book/' + book.id"/>
-                      <p-button size="small" severity="secondary" icon="pi pi-trash" [outlined]="true"
-                                [rounded]="true" (onClick)="deleteBook(book, $event)"/>
-                    }
+                    <!-- Right-->
+                    <div class="flex flex-column align-items-center mt-2">
+                      @if (true) {
+                        <p-button
+                          class="mb-2"
+                          [severity]="book.isFavorite ? 'danger' : 'secondary'"
+                          [icon]="!book.isFavorite ? 'pi pi-heart' : 'pi pi-heart-fill'"
+                          [text]="true"
+                          [rounded]="true"
+                          (onClick)="changeFavorite(book.id)">
+                        </p-button>
+                        <p-button size="small" class="mb-2" severity="secondary" icon="pi pi-pencil" [outlined]="true"
+                                  [rounded]="true" [routerLink]="'/update-book/' + book.id"/>
+                        <p-button size="small" severity="secondary" icon="pi pi-trash" [outlined]="true"
+                                  [rounded]="true" (onClick)="deleteBook(book, $event)"/>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      }
-    </ng-template>
-  </p-dataView>
-</div>
+        }
+      </ng-template>
+    </p-dataView>
+  </div>
+}

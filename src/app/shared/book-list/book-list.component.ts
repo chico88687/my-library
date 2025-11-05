@@ -7,6 +7,7 @@ import {Rating, RatingRateEvent} from 'primeng/rating';
 import {FormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
 import {RouterLink} from '@angular/router';
+import {ProgressSpinner} from 'primeng/progressspinner';
 
 @Component({
   standalone: true,
@@ -20,14 +21,14 @@ import {RouterLink} from '@angular/router';
     FormsModule,
     Button,
     RouterLink,
-
-
+    ProgressSpinner,
   ]
 })
 export class BookListComponent {
 
   @Input() books: Book[] = [];
   @Input() disableRating: boolean = false;
+  @Input() isLoading: boolean = false;
 
   @Output() changeFavoriteEmitter = new EventEmitter<number>();
   @Output() deleteBookEmitter = new EventEmitter<{ book: Book, event: Event }>();

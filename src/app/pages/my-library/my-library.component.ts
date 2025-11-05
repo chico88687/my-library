@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {BookFilter, BookService} from '../../service/database/book.service';
 import {Book} from '../../database/tables/book';
 import {TableModule} from 'primeng/table';
@@ -9,32 +9,58 @@ import {ConfirmDialog} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {SortMenuComponent} from '../../shared/sort-button/sort-menu.component';
 import {SortState} from '../../shared/sort-button/sort-state';
+import {FloatLabel} from 'primeng/floatlabel';
+import {FormsModule} from '@angular/forms';
+import {InputText} from 'primeng/inputtext';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'my-library',
   templateUrl: './my-library.component.html',
-  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, SortMenuComponent],
+  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, SortMenuComponent, FloatLabel, FormsModule, InputText],
   providers: [ConfirmationService]
 })
-export class MyLibraryComponent implements OnInit {
+export class MyLibraryComponent implements OnInit, OnDestroy {
 
   books: Book[] = [];
 
   fieldAndLabelSortMap: Map<string, string> = new Map()
+
   sortState: SortState = {predicate: 'title', order: 'asc'};
   bookFilter: BookFilter = {};
+  isLoading: boolean = false;
 
   protected readonly bookService = inject(BookService);
   protected readonly confirmationService = inject(ConfirmationService);
 
+  // Debounce search input
+  private readonly searchSubject = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
+
   ngOnInit(): void {
+    this.searchSubject
+      .pipe(
+        debounceTime(300), // wait 300 ms after the user stops typing
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => this.loadBooks());
     this.buildSortMap()
     this.loadBooks();
   }
 
-  loadBooks(): void {
-    this.bookService.getAll(this.sortState, this.bookFilter).then(books => this.books = books);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadBooks(shouldShowLoading: boolean = true): void {
+    this.isLoading = shouldShowLoading;
+    this.bookService.getAll(this.sortState, this.bookFilter).then(books => {
+      this.books = books
+      this.isLoading = false;
+    });
   }
 
   protected sortBooks($event: SortState): void {
@@ -43,13 +69,17 @@ export class MyLibraryComponent implements OnInit {
   }
 
   protected changeFavorite($event: number): void {
-    this.bookService.updateFavorite($event).then(() => this.loadBooks());
+    this.bookService.updateFavorite($event).then(() => this.loadBooks(false));
   }
 
   protected updateRating($event: { book: Book; rating: number }): void {
     const bookId = $event.book.id!;
     const rating = $event.rating;
-    this.bookService.updateRating(bookId, rating).then(() => this.loadBooks());
+    this.bookService.updateRating(bookId, rating).then(() => this.loadBooks(false));
+  }
+
+  protected search(value: string): void {
+    this.searchSubject.next(value);
   }
 
   protected filterByFavorite(): void {
