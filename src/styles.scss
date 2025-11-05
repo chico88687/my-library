@@ -7,3 +7,8 @@
 
 /* PrimeFlex */
 @import "primeflex/primeflex.css";
+
+.p-button {
+  transform: translateZ(0);
+  will-change: transform;
+}
