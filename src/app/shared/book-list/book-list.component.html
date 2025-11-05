@@ -18,9 +18,9 @@
                       <span class="font-normal text-xs md:text-base lg:text-lg xl:text-xl">
                         {{ book.author }}
                       </span>
-                      @if (book.rating) {
-                        <p-rating [ngModel]="book.rating" [disabled]="disableRating" (onRate)="changeRating(book, $event)"/>
-                      }
+                      <p-rating [ngModel]="book.rating"
+                                [disabled]="disableRating"
+                                (onRate)="changeRating(book, $event)"/>
                     </div>
                   </div>
 
