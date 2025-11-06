@@ -1,0 +1,34 @@
+<p-menu #sortOptions [model]="sortMenu" [popup]="true" appendTo="body"/>
+<div class="flex align-items-center gap-1">
+
+  <div class="flex flex-column mb-3">
+    <div class="flex justify-content-start">
+      <label for="filter_button" class="text-xs font-semibold">Tag:</label>
+    </div>
+    <p-button id="filter_button" size="small" icon="pi pi-tag" [outlined]="true" severity="secondary"/>
+  </div>
+
+  <div class="flex flex-column mb-3">
+    <div class="flex justify-content-start">
+      <label for="sort_button" class="text-xs font-semibold">Sorted By: </label>
+    </div>
+    <p-button
+      id="sort_button"
+      size="small"
+      label="{{ getButtonLabel() }}"
+      [outlined]="true"
+      [severity]="severity"
+      (onClick)="sortOptions.toggle($event)"
+      [style]="{'min-width': '4rem', 'max-height': '2rem'}"
+    />
+  </div>
+
+  <p-button
+    icon="{{ getIcon() }}"
+    size="small"
+    [outlined]="true"
+    [disabled]="sortState.predicate == null"
+    [severity]="severity"
+    (onClick)="emitNewOrder()"
+  />
+</div>

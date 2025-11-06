@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {DexieService} from '../../database/dexie.service';
 import {Book} from '../../database/tables/book';
 import {AlertService} from '../alert/alert.service';
-import {SortState} from '../../shared/sort-button/sort-state';
+import {SortState} from '../../shared/sort-state/sort-state';
 
 export interface BookFilter {
   searchTerm?: string;

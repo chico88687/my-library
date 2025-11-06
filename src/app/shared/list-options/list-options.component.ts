@@ -2,15 +2,16 @@ import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '
 import {MenuItem} from 'primeng/api';
 import {MenuModule} from 'primeng/menu';
 import {Button, ButtonSeverity} from 'primeng/button';
-import {SortOrder, SortState} from './sort-state';
+import {SortOrder, SortState} from '../sort-state/sort-state';
 
 @Component({
   standalone: true,
-  selector: 'sort-menu',
-  templateUrl: './sort-menu.component.html',
+  selector: 'list-options',
+  templateUrl: './list-options.component.html',
+  styleUrl: './list-options.component.scss',
   imports: [MenuModule, Button],
 })
-export class SortMenuComponent implements OnChanges {
+export class ListOptionsComponent implements OnChanges {
   @Input() fieldAndLabelMap: Map<string, string> = new Map();
   @Input() sortState: SortState = {};
   @Input() severity: ButtonSeverity = 'secondary';

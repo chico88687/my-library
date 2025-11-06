@@ -7,8 +7,8 @@ import {Button} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
-import {SortMenuComponent} from '../../shared/sort-button/sort-menu.component';
-import {SortState} from '../../shared/sort-button/sort-state';
+import {ListOptionsComponent} from '../../shared/list-options/list-options.component';
+import {SortState} from '../../shared/sort-state/sort-state';
 import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
@@ -19,7 +19,7 @@ import {Subject, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs';
   selector: 'my-library',
   templateUrl: './my-library.component.html',
   styleUrls: ['./my-library.component.scss'],
-  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, SortMenuComponent, FloatLabel, FormsModule, InputText],
+  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, ListOptionsComponent, FloatLabel, FormsModule, InputText],
   providers: [ConfirmationService]
 })
 export class MyLibraryComponent implements OnInit, OnDestroy {
