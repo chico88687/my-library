@@ -3,6 +3,7 @@ import {Button} from 'primeng/button';
 import {FileUpload, FileUploadHandlerEvent} from 'primeng/fileupload';
 import {ImportService} from '../../service/import/import.service';
 import {ProgressSpinner} from 'primeng/progressspinner';
+import {AlertService} from '../../service/alert/alert.service';
 
 @Component({
   standalone: true,
@@ -20,13 +21,24 @@ export class DataManagementComponent {
   isLoading = false;
 
   private readonly importService: ImportService = inject(ImportService);
+  private readonly alertService: AlertService = inject(AlertService);
 
-  protected import($event: FileUploadHandlerEvent): void {
+  protected async import($event: FileUploadHandlerEvent): Promise<void> {
     this.isLoading = true;
     const file: File = $event.files[0];
     if (!file) {
       return;
     }
-    this.importService.importBooks(file).then(() => this.isLoading = false);
+    try {
+      await this.importService.importBooks(file);
+      this.isLoading = false
+    } catch (error) {
+      if (error instanceof Error) {
+        this.alertService.addAlert('error', `Error occurred while importing ${file.name}: ${error.message}`);
+      } else {
+        this.alertService.addAlert('error', `Error occurred while importing ${file.name}`);
+      }
+      this.isLoading = false
+    }
   }
 }

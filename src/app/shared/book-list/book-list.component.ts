@@ -31,11 +31,16 @@ export class BookListComponent {
   @Input() isLoading: boolean = false;
 
   @Output() changeFavoriteEmitter = new EventEmitter<number>();
+  @Output() changeWasReadEmitter = new EventEmitter<number>();
   @Output() deleteBookEmitter = new EventEmitter<{ book: Book, event: Event }>();
   @Output() updateRatingEmitter = new EventEmitter<{ book: Book, rating: number }>();
 
   protected changeFavorite(id: number): void {
     this.changeFavoriteEmitter.emit(id);
+  }
+
+  protected changeWasRead(id: number) : void {
+    this.changeWasReadEmitter.emit(id);
   }
 
   protected deleteBook(book: Book, event: Event): void {

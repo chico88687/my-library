@@ -12,7 +12,7 @@ import {SortState} from '../../shared/sort-button/sort-state';
 import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import {Subject, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs';
 
 @Component({
   standalone: true,
@@ -70,6 +70,10 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
 
   protected changeFavorite($event: number): void {
     this.bookService.updateFavorite($event).then(() => this.loadBooks(false));
+  }
+
+  protected changeWasRead($event: number): void {
+    this.bookService.updateWasRead($event).then(() => this.loadBooks(false));
   }
 
   protected updateRating($event: { book: Book; rating: number }): void {
