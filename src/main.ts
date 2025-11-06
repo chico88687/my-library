@@ -1,6 +1,14 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
+import { provideServiceWorker } from '@angular/service-worker';
 import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
 
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+  ...appConfig,
+  providers: [
+    ...(appConfig.providers || []),  // <— include existing providers
+    provideServiceWorker('ngsw-worker.js', {
+      registrationStrategy: 'registerWhenStable:30000'
+    })
+  ]
+}).catch(err => console.error(err));
