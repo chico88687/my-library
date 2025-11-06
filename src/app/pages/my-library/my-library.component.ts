@@ -18,6 +18,7 @@ import {Subject, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs';
   standalone: true,
   selector: 'my-library',
   templateUrl: './my-library.component.html',
+  styleUrls: ['./my-library.component.scss'],
   imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, SortMenuComponent, FloatLabel, FormsModule, InputText],
   providers: [ConfirmationService]
 })

@@ -1,11 +1,13 @@
-<p-menu #sortOptions [model]="sortMenu" [popup]="true" appendTo="body" />
-<div class="flex align-items-center gap-1 md:gap-2 responsive-button">
+<p-menu #sortOptions [model]="sortMenu" [popup]="true" appendTo="body"/>
+<div class="flex align-items-center md:gap-1 responsive-button">
+
   <div class="flex flex-column mb-3">
     <div class="flex justify-content-start">
       <label for="sort_button" class="text-xs font-semibold">Sorted By: </label>
     </div>
     <p-button
       id="sort_button"
+      size="small"
       label="{{ getButtonLabel() }}"
       [outlined]="true"
       [severity]="severity"
@@ -13,13 +15,17 @@
     />
   </div>
 
-  <div class="responsive-button">
     <p-button
       icon="{{ getIcon() }}"
+      size="small"
       [outlined]="true"
       [disabled]="sortState.predicate == null"
       [severity]="severity"
       (onClick)="emitNewOrder()"
     />
+
+    <div class="flex justify-content-start">
+      <label for="filter_button" class="text-xs font-semibold">Tag:</label>
+    </div>
+    <p-button id="filter_button" size="small" icon="pi pi-tag" [outlined]="true" severity="secondary"/>
   </div>
-</div>
