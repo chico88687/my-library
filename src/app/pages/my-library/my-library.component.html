@@ -1,17 +1,31 @@
-<div class="p-card mb-3 p-3" style="background-color: #222225; border-radius: 8px;">
+<div class="p-card mb-3 p-2" style="background-color: #222225; border-radius: 8px;">
+  <div class="flex justify-content-between align-items-center">
+    <div>
+      <span class="text-2xl">My Library</span>
+    </div>
+    <div>
+      <p-button size="small" severity="secondary" icon="pi pi-cog" [outlined]="true" [routerLink]="'/data-management'"/>
+    </div>
+  </div>
+</div>
+
+<div class="p-card mb-3 p-2 sticky top-0 z-5 border-round shadow-2" style="background-color: #222225; border-radius: 8px;">
   <div class="p-grid">
     <div class="p-col-12 p-md-6">
       <!-- NEW: Flex container for left and right sides -->
       <div class="flex justify-content-between align-items-center">
         <!-- Left-->
         <div class="flex flex-column gap-1">
-          <p-floatlabel class="search-input">
+          <div class="flex flex-column mb-3 search-input">
+            <div class="flex justify-content-start">
+              <label for="search" class="text-xs font-semibold">Search</label>
+            </div>
             <input id="search" pInputText
                    pSize="small"
+                   placeholder="Title or Author"
                    [(ngModel)]="bookFilter.searchTerm"
                    (ngModelChange)="search($event)"/>
-            <label for="search">Search</label>
-          </p-floatlabel>
+          </div>
           <div class="flex justify-content-start gap-1">
             <p-button size="small"
                       [severity]="bookFilter.wasRead ? 'success' : 'secondary'"
@@ -28,8 +42,8 @@
         <!-- Right-->
         <div class="flex flex-column">
 
-            <list-options [fieldAndLabelMap]="fieldAndLabelSortMap" [sortState]="sortState"
-                          (sortStateEmitter)="sortBooks($event)"/>
+          <list-options [fieldAndLabelMap]="fieldAndLabelSortMap" [sortState]="sortState"
+                        (sortStateEmitter)="sortBooks($event)"/>
           <div class="flex justify-content-end">
             <p-button size="small" icon="pi pi-plus" [outlined]="true" [routerLink]="'/new-book'"/>
           </div>
