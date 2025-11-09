@@ -9,8 +9,13 @@ import {FormsModule} from '@angular/forms';
 import {Button, ButtonDirective} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
 import {Ripple} from 'primeng/ripple';
-import {Book} from '../../database/tables/book';
 import {ConfirmDialog} from 'primeng/confirmdialog';
+
+export type CategoryWithNumberOfBooks = {
+  id?: number;
+  category: Category;
+  numberOfBooks: number;
+};
 
 @Component({
   standalone: true,
@@ -31,7 +36,9 @@ import {ConfirmDialog} from 'primeng/confirmdialog';
 export class CategoryListComponent implements OnInit {
 
   categories: Category[] = [];
-  categoryIdAndNumberOfBooksMap: Map<number, number> = new Map()
+  categoryIdAndNumberOfBooksMap: Map<number, number> = new Map();
+
+  categoriesWithCounts: CategoryWithNumberOfBooks[] = [];
 
   isLoading = false;
 
@@ -97,8 +104,17 @@ export class CategoryListComponent implements OnInit {
 
   private async loadData(): Promise<void> {
     this.isLoading = true;
-    this.categories = await this.categoryService.getAll();
+
+    const categories = await this.categoryService.getAll();
     this.categoryIdAndNumberOfBooksMap = await this.buildCategoryMap();
+
+    this.categoriesWithCounts = categories.map(c => ({
+      id: c.id,
+      category: c,
+      numberOfBooks: this.categoryIdAndNumberOfBooksMap.get(c.id!) ?? 0
+    }));
+
+    this.isLoading = false;
   }
 
   private async buildCategoryMap(): Promise<Map<number, number>> {

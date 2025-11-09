@@ -5,18 +5,25 @@
     <p-button size="small" icon="pi pi-plus" [outlined]="true" (onClick)="addCategory()"/>
   </div>
 
-  <p-table [value]="categories" dataKey="id" editMode="row"
+  <p-table [value]="categoriesWithCounts" dataKey="id" editMode="row"
+           stripedRows
            [tableStyle]="{ 'min-width': '100%' }"
            class="w-full">
     <ng-template #header>
       <tr>
-        <th id="category">Category</th>
-        <th id="numberOfBooks">Nº of books</th>
+        <th id="category" pSortableColumn="category.name">
+          Category
+          <p-sortIcon field="category.name"/>
+        </th>
+        <th id="numberOfBooks" pSortableColumn="numberOfBooks">
+          Nº of books
+          <p-sortIcon field="numberOfBooks"/>
+        </th>
         <th id="buttons"></th>
       </tr>
     </ng-template>
-    <ng-template #body let-category let-editing="editing" let-ri="rowIndex">
-      <tr [pEditableRow]="category">
+    <ng-template #body let-categoryWithBookNumber let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="categoryWithBookNumber">
         <td>
           <p-cellEditor>
             <ng-template #input>
@@ -24,15 +31,15 @@
                 pInputText
                 type="text"
                 class="w-full"
-                [(ngModel)]="category.name"/>
+                [(ngModel)]="categoryWithBookNumber.category.name"/>
             </ng-template>
             <ng-template #output>
-              {{ category.name }}
+              {{ categoryWithBookNumber.category.name }}
             </ng-template>
           </p-cellEditor>
         </td>
         <td>
-          {{ categoryIdAndNumberOfBooksMap.get(category.id) ?? '' }}
+          {{ categoryWithBookNumber.numberOfBooks }}
         </td>
         <td>
           <div class="flex items-center justify-center gap-2">
@@ -43,7 +50,7 @@
                 type="button"
                 pSaveEditableRow
                 icon="pi pi-check"
-                (click)="onRowEditSave(category)"
+                (click)="onRowEditSave(categoryWithBookNumber.category)"
                 text
                 rounded
                 size="small"
@@ -55,7 +62,7 @@
                 type="button"
                 pCancelEditableRow
                 icon="pi pi-times"
-                (click)="onRowEditCancel(category, ri)"
+                (click)="onRowEditCancel(categoryWithBookNumber.category, ri)"
                 text
                 size="small"
                 rounded
@@ -68,7 +75,7 @@
                 type="button"
                 pInitEditableRow
                 icon="pi pi-pencil"
-                (click)="onRowEditInit(category)"
+                (click)="onRowEditInit(categoryWithBookNumber.category)"
                 text
                 size="small"
                 rounded
@@ -78,7 +85,7 @@
                 pButton
                 type="button"
                 icon="pi pi-trash"
-                (click)="deleteCategory(category, $event)"
+                (click)="deleteCategory(categoryWithBookNumber.category, $event)"
                 text
                 size="small"
                 rounded
