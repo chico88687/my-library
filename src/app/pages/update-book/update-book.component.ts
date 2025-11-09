@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
@@ -8,24 +8,33 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {ButtonModule} from 'primeng/button';
 import {BookFormGroup, BookFormService} from '../../service/form/book-form.service';
+import {BookAvatarComponent} from '../../shared/book-avatar/book-avatar.component';
+import {Rating} from 'primeng/rating';
+import {Textarea} from 'primeng/textarea';
+import {FloatLabel} from 'primeng/floatlabel';
+import {Category} from '../../database/tables/category';
+import {CategoryService} from '../../service/database/category.service';
 
 @Component({
   standalone: true,
   selector: 'update-book',
   templateUrl: './update-book.component.html',
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule]
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, BookAvatarComponent, Rating, Textarea, FloatLabel]
 })
 export class UpdateBookComponent implements OnInit {
   form!: BookFormGroup;
+
   isUpdate = false;
+
+  categories: Category[] = [];
+
   private bookId?: number;
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly bookService: BookService,
-    private readonly bookFormService: BookFormService
-  ) {}
+  private readonly categoryService: CategoryService = inject(CategoryService);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly router: Router = inject(Router);
+  private readonly bookService: BookService = inject(BookService);
+  private readonly bookFormService: BookFormService = inject(BookFormService);
 
   ngOnInit(): void {
     this.form = this.bookFormService.createBookFormGroup();
@@ -40,6 +49,9 @@ export class UpdateBookComponent implements OnInit {
     }
   }
 
+  protected addBookPicture(): void {
+
+  }
 
   private async loadBook(id: number): Promise<void> {
     const book = await this.bookService.getById(id);
@@ -59,15 +71,25 @@ export class UpdateBookComponent implements OnInit {
 
     if (this.isUpdate && this.bookId != null) {
       // Build partial changes from the current form value
-      const { id, ...rest } = bookValue as Book; // in the update flow, id is number
-      const changes: Partial<Book> = { ...rest };
+      const {id, ...rest} = bookValue as Book; // in the update flow, id is number
+      const changes: Partial<Book> = {...rest};
       await this.bookService.update(this.bookId, changes);
     } else {
-      const { id, ...rest } = bookValue as any; // NewBook has id: null, strip it
-      const toAdd: Omit<Book, 'id'> = { ...rest };
+      const {id, ...rest} = bookValue as any; // NewBook has id: null, strip it
+      const toAdd: Omit<Book, 'id'> = {...rest};
       await this.bookService.add(toAdd);
     }
 
     await this.router.navigate(['/my-books']);
+  }
+
+  protected changeFavorite(): void {
+    const currentFavorite = this.form.get('isFavorite')?.value;
+    this.form.patchValue({isFavorite: !currentFavorite});
+  }
+
+  protected changeWasRead(): void {
+    const currentWasRead = this.form.get('wasRead')?.value;
+    this.form.patchValue({wasRead: !currentWasRead});
   }
 }
