@@ -71,6 +71,13 @@ export class BookService {
     return this.db.books.get(id);
   }
 
+  async countByCategoryId(categoryId: number): Promise<number> {
+    return this.db.books
+      .where('categoryId')
+      .equals(categoryId)
+      .count();
+  }
+
   add(book: Omit<Book, 'id'>, shouldAddAlert = true) {
     const added = this.db.books.add(book);
     if (shouldAddAlert) {

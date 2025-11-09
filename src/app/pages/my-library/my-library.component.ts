@@ -13,20 +13,21 @@ import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {Subject, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs';
+import {PageHeaderComponent} from '../../shared/page-header/page-header.component';
 
 @Component({
   standalone: true,
   selector: 'my-library',
   templateUrl: './my-library.component.html',
   styleUrls: ['./my-library.component.scss'],
-  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, ListOptionsComponent, FloatLabel, FormsModule, InputText],
+  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, ListOptionsComponent, FloatLabel, FormsModule, InputText, PageHeaderComponent],
   providers: [ConfirmationService]
 })
 export class MyLibraryComponent implements OnInit, OnDestroy {
 
   books: Book[] = [];
 
-  fieldAndLabelSortMap: Map<string, string> = new Map()
+  fieldAndLabelSortMap: Map<string, string> = new Map();
 
   sortState: SortState = {predicate: 'title', order: 'asc'};
   bookFilter: BookFilter = {};

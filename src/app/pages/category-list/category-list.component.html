@@ -1,1 +1,94 @@
-Category List
+<page-header title="Categories"/>
+
+<div class="p-card mb-3 p-2 col-12" style="background-color: #222225; border-radius: 8px;">
+  <div class="flex justify-content-end mb-2">
+    <p-button size="small" icon="pi pi-plus" [outlined]="true" (onClick)="addCategory()"/>
+  </div>
+
+  <p-table [value]="categories" dataKey="id" editMode="row"
+           [tableStyle]="{ 'min-width': '100%' }"
+           class="w-full">
+    <ng-template #header>
+      <tr>
+        <th id="category">Category</th>
+        <th id="numberOfBooks">Nº of books</th>
+        <th id="buttons"></th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-category let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="category">
+        <td>
+          <p-cellEditor>
+            <ng-template #input>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="category.name"/>
+            </ng-template>
+            <ng-template #output>
+              {{ category.name }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          {{ categoryIdAndNumberOfBooksMap.get(category.id) ?? '' }}
+        </td>
+        <td>
+          <div class="flex items-center justify-center gap-2">
+            @if (editing) {
+              <button
+                pButton
+                pRipple
+                type="button"
+                pSaveEditableRow
+                icon="pi pi-check"
+                (click)="onRowEditSave(category)"
+                text
+                rounded
+                size="small"
+                severity="secondary"
+              ></button>
+              <button
+                pButton
+                pRipple
+                type="button"
+                pCancelEditableRow
+                icon="pi pi-times"
+                (click)="onRowEditCancel(category, ri)"
+                text
+                size="small"
+                rounded
+                severity="secondary"
+              ></button>
+            } @else {
+              <button
+                pButton
+                pRipple
+                type="button"
+                pInitEditableRow
+                icon="pi pi-pencil"
+                (click)="onRowEditInit(category)"
+                text
+                size="small"
+                rounded
+                severity="secondary"
+              ></button>
+              <button
+                pButton
+                pRipple
+                type="button"
+                pInitEditableRow
+                icon="pi pi-trash"
+                (click)="onRowEditInit(category)"
+                text
+                size="small"
+                rounded
+                severity="secondary"
+              ></button>
+            }
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
