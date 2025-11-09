@@ -9,6 +9,8 @@ import {FormsModule} from '@angular/forms';
 import {Button, ButtonDirective} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
 import {Ripple} from 'primeng/ripple';
+import {Book} from '../../database/tables/book';
+import {ConfirmDialog} from 'primeng/confirmdialog';
 
 @Component({
   standalone: true,
@@ -21,7 +23,8 @@ import {Ripple} from 'primeng/ripple';
     Button,
     InputText,
     ButtonDirective,
-    Ripple
+    Ripple,
+    ConfirmDialog
   ],
   providers: [ConfirmationService]
 })
@@ -40,8 +43,7 @@ export class CategoryListComponent implements OnInit {
   protected readonly confirmationService = inject(ConfirmationService);
 
   ngOnInit(): void {
-    this.addingTest().then(() => this.loadData());
-    // void this.loadData()
+    void this.loadData()
   }
 
   addCategory(): void {
@@ -57,11 +59,40 @@ export class CategoryListComponent implements OnInit {
 
   onRowEditSave(category: Category): void {
     delete this.clonedCategories[category.id!];
+    if (category.id) {
+      void this.categoryService.update(category.id, category);
+    }
+    else {
+      void this.categoryService.add(category);
+    }
   }
 
   onRowEditCancel(category: Category, index: number) {
     this.categories[index] = this.clonedCategories[category.id!];
     delete this.clonedCategories[category.id!];
+  }
+
+  protected deleteCategory(category: Category, event: Event): void {
+    const message = `Are you sure you want to delete the category "${category.name}"?`;
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message,
+      // header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Delete',
+        severity: 'danger',
+      },
+      accept: () => {
+        void this.categoryService.delete(category);
+        void this.loadData();
+      },
+    });
   }
 
   private async loadData(): Promise<void> {
@@ -80,13 +111,5 @@ export class CategoryListComponent implements OnInit {
     }
 
     return categoryAndNumberOfBooksMap;
-  }
-
-  private async addingTest(): Promise<void> {
-    const newCategory = {
-      name: 'Test'
-    }
-
-    await this.categoryService.add(newCategory);
   }
 }

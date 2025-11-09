@@ -12,3 +12,8 @@
   transform: translateZ(0);
   will-change: transform;
 }
+
+:host ::ng-deep .p-table td {
+  white-space: normal !important;
+  word-break: break-word;
+}

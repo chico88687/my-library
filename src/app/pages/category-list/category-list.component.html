@@ -23,6 +23,7 @@
               <input
                 pInputText
                 type="text"
+                class="w-full"
                 [(ngModel)]="category.name"/>
             </ng-template>
             <ng-template #output>
@@ -75,11 +76,9 @@
               ></button>
               <button
                 pButton
-                pRipple
                 type="button"
-                pInitEditableRow
                 icon="pi pi-trash"
-                (click)="onRowEditInit(category)"
+                (click)="deleteCategory(category, $event)"
                 text
                 size="small"
                 rounded
@@ -92,3 +91,5 @@
     </ng-template>
   </p-table>
 </div>
+
+<p-confirmDialog [position]="'bottom'"/>
