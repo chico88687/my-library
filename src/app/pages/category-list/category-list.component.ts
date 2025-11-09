@@ -1,10 +1,10 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {PageHeaderComponent} from '../../shared/page-header/page-header.component';
 import {BookService} from '../../service/database/book.service';
 import {ConfirmationService} from 'primeng/api';
 import {CategoryService} from '../../service/database/category.service';
 import {Category} from '../../database/tables/category';
-import {TableModule} from 'primeng/table';
+import {Table, TableModule} from 'primeng/table';
 import {FormsModule} from '@angular/forms';
 import {Button, ButtonDirective} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
@@ -35,6 +35,8 @@ export type CategoryWithNumberOfBooks = {
 })
 export class CategoryListComponent implements OnInit {
 
+  @ViewChild(Table) table!: Table;
+
   categories: Category[] = [];
   categoryIdAndNumberOfBooksMap: Map<number, number> = new Map();
 
@@ -42,8 +44,8 @@ export class CategoryListComponent implements OnInit {
 
   isLoading = false;
 
-  isEditing = false;
-  clonedCategories: { [id: number]: Category } = {};
+  clonedCategories: { [key: string]: Category } = {};
+  tempRowCounter = 0;
 
   protected readonly categoryService = inject(CategoryService);
   protected readonly bookService = inject(BookService);
@@ -54,30 +56,63 @@ export class CategoryListComponent implements OnInit {
   }
 
   addCategory(): void {
-    // this.categories.push({
-    //   id: undefined,
-    //   name: ''
-    // });
+    const isNewRowAlready = this.categoriesWithCounts.some(c => !c.id);
+    if (isNewRowAlready) return;
+
+    const newCategory: CategoryWithNumberOfBooks = {
+      id: undefined,
+      category: { id: undefined, name: '' },
+      numberOfBooks: 0
+    };
+
+    this.categoriesWithCounts = [newCategory, ...this.categoriesWithCounts];
+
+    setTimeout(() => {
+      this.table.initRowEdit(newCategory);
+    });
   }
 
   onRowEditInit(category: Category): void {
-    this.clonedCategories[category.id!] = {...category};
+    const key = category.id != null ? String(category.id) : `__tmp__${this.tempRowCounter ?? 0}`;
+    // If it's a temporary row with no id we still want to store a clone,
+    // so create a temp counter key (optional — we mainly need clones for existing rows).
+    this.clonedCategories[key] = { ...category };
   }
 
-  onRowEditSave(category: Category): void {
+
+  async onRowEditSave(category: Category): Promise<void> {
     delete this.clonedCategories[category.id!];
+
     if (category.id) {
-      void this.categoryService.update(category.id, category);
+      await this.categoryService.update(category.id, category);
+    } else {
+      await this.categoryService.add(category);
     }
-    else {
-      void this.categoryService.add(category);
-    }
+
+    await this.loadData();
   }
 
   onRowEditCancel(category: Category, index: number) {
-    this.categories[index] = this.clonedCategories[category.id!];
-    delete this.clonedCategories[category.id!];
+    if (category.id == null) {
+      // This was a new/unsaved row — remove it from the displayed array
+      // index is the rowIndex from the table template (ri)
+      this.categoriesWithCounts = this.categoriesWithCounts.filter((_, i) => i !== index);
+    } else {
+      // Existing row — restore the clone
+      const key = String(category.id);
+      const original = this.clonedCategories[key];
+      if (original) {
+        // The categoriesWithCounts holds objects of shape {id, category, numberOfBooks}
+        // so restore the inner category object
+        const target = this.categoriesWithCounts[index];
+        if (target) {
+          target.category = original;
+        }
+      }
+      delete this.clonedCategories[key];
+    }
   }
+
 
   protected deleteCategory(category: Category, event: Event): void {
     const message = `Are you sure you want to delete the category "${category.name}"?`;
