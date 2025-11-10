@@ -33,8 +33,11 @@
         <!-- Right-->
         <div class="flex flex-column">
 
-          <list-options [fieldAndLabelMap]="fieldAndLabelSortMap" [sortState]="sortState"
-                        (sortStateEmitter)="sortBooks($event)"/>
+          <list-options [fieldAndLabelMap]="fieldAndLabelSortMap"
+                        [sortState]="sortState"
+                        [categoryMap]="categoryIdMap"
+                        (sortStateEmitter)="sortBooks($event)"
+                        (filterStateEmitter)="filterBooks($event)"/>
           <div class="flex justify-content-end">
             <p-button size="small" icon="pi pi-plus" [outlined]="true" [routerLink]="'/new-book'"/>
           </div>

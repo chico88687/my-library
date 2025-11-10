@@ -3,6 +3,7 @@ import {MenuItem} from 'primeng/api';
 import {MenuModule} from 'primeng/menu';
 import {Button, ButtonSeverity} from 'primeng/button';
 import {SortOrder, SortState} from '../sort-state/sort-state';
+import {Category} from '../../database/tables/category';
 
 @Component({
   standalone: true,
@@ -15,10 +16,13 @@ export class ListOptionsComponent implements OnChanges {
   @Input() fieldAndLabelMap: Map<string, string> = new Map();
   @Input() sortState: SortState = {};
   @Input() severity: ButtonSeverity = 'secondary';
+  @Input() categoryMap?: Map<number, Category>;
 
   @Output() sortStateEmitter = new EventEmitter<SortState>();
+  @Output() filterStateEmitter = new EventEmitter<number>();
 
   sortMenu: MenuItem[] = [];
+  filterMenu: MenuItem[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (Object.hasOwn(changes, 'fieldList')) {
@@ -27,6 +31,10 @@ export class ListOptionsComponent implements OnChanges {
 
     if (Object.hasOwn(changes, 'sortState')) {
       this.buildMenuItems();
+    }
+
+    if (Object.hasOwn(changes, 'categoryMap')) {
+      this.buildFilterMenuItems();
     }
   }
 
@@ -37,6 +45,15 @@ export class ListOptionsComponent implements OnChanges {
         label,
         command: () => this.emitNewPredicate(field),
       }));
+  }
+
+  buildFilterMenuItems(): void {
+    this.categoryMap?.forEach((category, id) => {
+      this.filterMenu.push({
+        label: category.name,
+        command: () => this.emitNewFilter(id),
+      });
+    })
   }
 
   emitNewPredicate(field: string): void {
@@ -55,6 +72,10 @@ export class ListOptionsComponent implements OnChanges {
     } as SortState;
 
     this.sortStateEmitter.emit(newSortState);
+  }
+
+  emitNewFilter(id: number): void {
+    this.filterStateEmitter.emit(id);
   }
 
   getButtonLabel(): string {

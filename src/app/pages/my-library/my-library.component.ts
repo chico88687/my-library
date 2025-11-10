@@ -75,6 +75,14 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
     this.loadBooks();
   }
 
+  protected filterBooks($event: number): void {
+    this.bookFilter = {
+      ...this.bookFilter,
+      categoryId: $event
+    }
+    this.loadBooks();
+  }
+
   protected changeFavorite($event: number): void {
     this.bookService.updateFavorite($event).then(() => this.loadBooks(false));
   }

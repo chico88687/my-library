@@ -1,11 +1,17 @@
 <p-menu #sortOptions [model]="sortMenu" [popup]="true" appendTo="body"/>
+<p-menu #filterOptions [model]="filterMenu" [popup]="true" appendTo="body"/>
 <div class="flex align-items-center gap-1">
 
   <div class="flex flex-column mb-3">
     <div class="flex justify-content-start">
       <label for="filter_button" class="text-xs font-semibold">Tag:</label>
     </div>
-    <p-button id="filter_button" size="small" icon="pi pi-tag" [outlined]="true" severity="secondary"/>
+    <p-button id="filter_button"
+              size="small"
+              icon="pi pi-tag"
+              [outlined]="true"
+              severity="secondary"
+              (onClick)="filterOptions.toggle($event)"/>
   </div>
 
   <div class="flex flex-column mb-3">

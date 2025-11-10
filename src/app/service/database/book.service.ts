@@ -8,6 +8,7 @@ export interface BookFilter {
   searchTerm?: string;
   isFavorite?: boolean;
   wasRead?: boolean;
+  categoryId?: number;
 }
 
 @Injectable({providedIn: 'root'})
@@ -40,6 +41,10 @@ export class BookService {
 
         if (filter.wasRead !== undefined) {
           matches = matches && book.wasRead === filter.wasRead;
+        }
+
+        if (filter.categoryId !== undefined) {
+          matches = matches && book.categoryId === filter.categoryId;
         }
 
         return matches;
