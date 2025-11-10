@@ -8,8 +8,9 @@
     </div>
     <p-button id="filter_button"
               size="small"
-              icon="pi pi-tag"
+              [icon]="!activeFilter ? 'pi pi-tag' : ''"
               [outlined]="true"
+              [label]="getFilterLabel()"
               severity="secondary"
               (onClick)="filterOptions.toggle($event)"/>
   </div>
@@ -30,7 +31,7 @@
   </div>
 
   <p-button
-    icon="{{ getIcon() }}"
+    icon="{{ getSortIcon() }}"
     size="small"
     [outlined]="true"
     [disabled]="sortState.predicate == null"

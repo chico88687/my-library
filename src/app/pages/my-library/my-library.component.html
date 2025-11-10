@@ -36,6 +36,7 @@
           <list-options [fieldAndLabelMap]="fieldAndLabelSortMap"
                         [sortState]="sortState"
                         [categoryMap]="categoryIdMap"
+                        [activeFilter]="bookFilter.categoryId"
                         (sortStateEmitter)="sortBooks($event)"
                         (filterStateEmitter)="filterBooks($event)"/>
           <div class="flex justify-content-end">

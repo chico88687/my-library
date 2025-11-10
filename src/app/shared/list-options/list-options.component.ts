@@ -16,10 +16,11 @@ export class ListOptionsComponent implements OnChanges {
   @Input() fieldAndLabelMap: Map<string, string> = new Map();
   @Input() sortState: SortState = {};
   @Input() severity: ButtonSeverity = 'secondary';
+  @Input() activeFilter?: number;
   @Input() categoryMap?: Map<number, Category>;
 
   @Output() sortStateEmitter = new EventEmitter<SortState>();
-  @Output() filterStateEmitter = new EventEmitter<number>();
+  @Output() filterStateEmitter = new EventEmitter<number | undefined>();
 
   sortMenu: MenuItem[] = [];
   filterMenu: MenuItem[] = [];
@@ -48,6 +49,12 @@ export class ListOptionsComponent implements OnChanges {
   }
 
   buildFilterMenuItems(): void {
+    if (this.categoryMap) {
+      this.filterMenu.push({
+        label: 'All',
+        command: () => this.emitNewFilter(),
+      });
+    }
     this.categoryMap?.forEach((category, id) => {
       this.filterMenu.push({
         label: category.name,
@@ -74,7 +81,7 @@ export class ListOptionsComponent implements OnChanges {
     this.sortStateEmitter.emit(newSortState);
   }
 
-  emitNewFilter(id: number): void {
+  emitNewFilter(id?: number): void {
     this.filterStateEmitter.emit(id);
   }
 
@@ -86,11 +93,19 @@ export class ListOptionsComponent implements OnChanges {
     return this.sortState.order;
   }
 
-  getIcon(): string {
+  getSortIcon(): string {
     let icon = 'pi-sort-alt';
     if (this.sortState.order != null) {
       icon = this.sortState.order === 'asc' ? 'pi-sort-amount-up-alt' : 'pi-sort-amount-down';
     }
     return `pi ${icon}`;
+  }
+
+  getFilterLabel(): string | undefined {
+    if (!this.activeFilter) {
+      return undefined;
+    }
+
+    return this.categoryMap?.get(this.activeFilter)?.name;
   }
 }

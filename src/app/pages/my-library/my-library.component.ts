@@ -75,7 +75,7 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
     this.loadBooks();
   }
 
-  protected filterBooks($event: number): void {
+  protected filterBooks($event?: number): void {
     this.bookFilter = {
       ...this.bookFilter,
       categoryId: $event
