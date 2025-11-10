@@ -20,12 +20,19 @@
                     <div class="flex align-items-center">
                       <book-avatar/>
                       <div class="flex flex-column justify-content-center ml-2">
-                        <a class="font-normal text-lg md:text-lg lg:text-xl xl:text-2xl" style="color: inherit;" [routerLink]="'/update-book/' + book.id">
+                        <a class="font-normal text-lg md:text-lg lg:text-xl xl:text-2xl" style="color: inherit;"
+                           [routerLink]="'/update-book/' + book.id">
                           {{ book.title }}
                         </a>
                         <span class="font-normal text-base md:text-base lg:text-lg xl:text-xl">
                         {{ book.author }}
                       </span>
+                        @if (book.categoryId && categoryIdMap) {
+                          <div>
+                            <span class="text-xs"><i class="pi pi-tag"
+                                                     style="font-size: 0.6rem"></i> {{ categoryIdMap.get(book.categoryId)?.name }} </span>
+                          </div>
+                        }
                         <div class="mt-1">
                           <p-rating [ngModel]="book.rating"
                                     [disabled]="disableRating"

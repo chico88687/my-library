@@ -8,6 +8,7 @@ import {FormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {ProgressSpinner} from 'primeng/progressspinner';
+import {Category} from '../../database/tables/category';
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ export class BookListComponent {
   @Input() books: Book[] = [];
   @Input() disableRating: boolean = false;
   @Input() isLoading: boolean = false;
+  @Input() categoryIdMap?: Map<number, Category>;
 
   @Output() changeFavoriteEmitter = new EventEmitter<number>();
   @Output() changeWasReadEmitter = new EventEmitter<number>();

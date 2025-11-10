@@ -9,18 +9,19 @@ import {ConfirmDialog} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {ListOptionsComponent} from '../../shared/list-options/list-options.component';
 import {SortState} from '../../shared/sort-state/sort-state';
-import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
-import {Subject, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs';
+import {debounceTime, distinctUntilChanged, Subject, takeUntil} from 'rxjs';
 import {PageHeaderComponent} from '../../shared/page-header/page-header.component';
+import {Category} from '../../database/tables/category';
+import {CategoryService} from '../../service/database/category.service';
 
 @Component({
   standalone: true,
   selector: 'my-library',
   templateUrl: './my-library.component.html',
   styleUrls: ['./my-library.component.scss'],
-  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, ListOptionsComponent, FloatLabel, FormsModule, InputText, PageHeaderComponent],
+  imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, ListOptionsComponent, FormsModule, InputText, PageHeaderComponent],
   providers: [ConfirmationService]
 })
 export class MyLibraryComponent implements OnInit, OnDestroy {
@@ -29,11 +30,14 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
 
   fieldAndLabelSortMap: Map<string, string> = new Map();
 
+  categoryIdMap?: Map<number, Category>;
+
   sortState: SortState = {predicate: 'title', order: 'asc'};
   bookFilter: BookFilter = {};
   isLoading: boolean = false;
 
   protected readonly bookService = inject(BookService);
+  protected readonly categoryService = inject(CategoryService);
   protected readonly confirmationService = inject(ConfirmationService);
 
   // Debounce search input
@@ -48,7 +52,8 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(() => this.loadBooks());
-    this.buildSortMap()
+    this.buildSortMap();
+    this.loadCategories();
     this.loadBooks();
   }
 
@@ -131,5 +136,14 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
       ['isFavorite', 'Favorite'],
       ['wasRead', 'Already Read'],
     ]);
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getAll().then(categories => {
+      this.categoryIdMap = new Map<number, Category>();
+      for (const category of categories) {
+        this.categoryIdMap?.set(category.id!, category);
+      }
+    })
   }
 }

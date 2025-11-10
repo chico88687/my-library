@@ -45,6 +45,7 @@
 </div>
 <book-list [books]="books"
            [isLoading]="isLoading"
+           [categoryIdMap]="categoryIdMap"
            (changeFavoriteEmitter)="changeFavorite($event)"
            (changeWasReadEmitter)="changeWasRead($event)"
            (deleteBookEmitter)="deleteBook($event)"
