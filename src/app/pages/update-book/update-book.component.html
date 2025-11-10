@@ -39,10 +39,12 @@
         <label for="filter_button" class="block mb-2">Category</label>
       </div>
       <div>
-<!--        <p-floatlabel variant="on">-->
-<!--          <p-autocomplete formControlName="categoryId" [suggestions]="items" (completeMethod)="search($event)" inputId="category"/>-->
-<!--          <label for="on_label">Category</label>-->
-<!--        </p-floatlabel>-->
+        <p-auto-complete formControlName="category"
+                         [suggestions]="filteredCategories"
+                         (completeMethod)="filterCategories($event)"
+                         optionLabel="name"
+                         [dropdown]="true"
+                          [showClear]="true"/>
       </div>
     </div>
 

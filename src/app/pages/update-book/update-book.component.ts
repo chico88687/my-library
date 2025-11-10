@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {BookService} from '../../service/database/book.service';
@@ -11,22 +11,24 @@ import {BookFormGroup, BookFormService} from '../../service/form/book-form.servi
 import {BookAvatarComponent} from '../../shared/book-avatar/book-avatar.component';
 import {Rating} from 'primeng/rating';
 import {Textarea} from 'primeng/textarea';
-import {FloatLabel} from 'primeng/floatlabel';
 import {Category} from '../../database/tables/category';
 import {CategoryService} from '../../service/database/category.service';
+import {AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent} from 'primeng/autocomplete';
 
 @Component({
   standalone: true,
   selector: 'update-book',
   templateUrl: './update-book.component.html',
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, BookAvatarComponent, Rating, Textarea, FloatLabel]
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, BookAvatarComponent, Rating, Textarea, AutoComplete, FormsModule]
 })
 export class UpdateBookComponent implements OnInit {
   form!: BookFormGroup;
 
   isUpdate = false;
 
+  categoryIdMap: Map<number, Category> = new Map<number, Category>();
   categories: Category[] = [];
+  filteredCategories: Category[] = [];
 
   private bookId?: number;
 
@@ -37,6 +39,7 @@ export class UpdateBookComponent implements OnInit {
   private readonly bookFormService: BookFormService = inject(BookFormService);
 
   ngOnInit(): void {
+    this.categoryService.getAll().then(categories => this.initializeCategories(categories));
     this.form = this.bookFormService.createBookFormGroup();
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -56,7 +59,7 @@ export class UpdateBookComponent implements OnInit {
   private async loadBook(id: number): Promise<void> {
     const book = await this.bookService.getById(id);
     if (book) {
-      this.bookFormService.resetForm(this.form, book);
+      this.bookFormService.resetForm(this.form, book, this.categoryIdMap.get(book.categoryId!) ?? null);
     }
   }
 
@@ -91,5 +94,26 @@ export class UpdateBookComponent implements OnInit {
   protected changeWasRead(): void {
     const currentWasRead = this.form.get('wasRead')?.value;
     this.form.patchValue({wasRead: !currentWasRead});
+  }
+
+  private initializeCategories(categories: Category[]): void {
+    this.categories = categories;
+    for (const category of categories) {
+      this.categoryIdMap.set(category.id!, category);
+    }
+  }
+
+  protected filterCategories(event: AutoCompleteCompleteEvent): void {
+    const query = event.query?.toLowerCase() ?? '';
+
+
+    if (query.length === 0 ) {
+      this.filteredCategories = this.categories;
+      return;
+    }
+
+    this.filteredCategories = (this.categories || []).filter(category => {
+      category.name?.toLowerCase().startsWith(query)
+    });
   }
 }

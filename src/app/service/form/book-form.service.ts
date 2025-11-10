@@ -1,29 +1,21 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Book } from '../../database/tables/book';
+import { Category } from '../../database/tables/category';
 
-// JHipster-like typed form service for Book
-
-/** Utility type that makes all fields optional except the required key `id`. */
+// --- Type helpers ---
 type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>> & { id: T['id'] };
-
-/** NewBook type used by forms for create flow (id is always null). */
 export type NewBook = Omit<Book, 'id'> & { id: null };
-
-/**
- * Type for createFormGroup and resetForm argument.
- * It accepts Book for edit and NewBook for create.
- */
 export type BookFormGroupInput = Book | PartialWithRequiredKeyOf<NewBook>;
 
-/** Defaults applied when creating or resetting the form. */
 export type BookFormDefaults = Pick<NewBook, 'id' | 'isFavorite' | 'wasRead'> & {
   rating: number | null;
   notes: string;
-  categoryId: number | null;
+  category: Category | null;
   wishId: number | null;
 };
 
+// --- Form content ---
 export type BookFormGroupContent = {
   id: FormControl<Book['id'] | NewBook['id']>;
   title: FormControl<Book['title']>;
@@ -32,7 +24,7 @@ export type BookFormGroupContent = {
   notes: FormControl<NonNullable<Book['notes']>>;
   isFavorite: FormControl<Book['isFavorite']>;
   wasRead: FormControl<Book['wasRead']>;
-  categoryId: FormControl<Book['categoryId'] | null>;
+  category: FormControl<Category | null>;
   wishId: FormControl<Book['wishId'] | null>;
 };
 
@@ -51,16 +43,16 @@ export class BookFormService {
       notes: new FormControl(bookRawValue.notes, { nonNullable: true }),
       isFavorite: new FormControl(bookRawValue.isFavorite, { nonNullable: true }),
       wasRead: new FormControl(bookRawValue.wasRead, { nonNullable: true }),
-      categoryId: new FormControl(bookRawValue.categoryId),
+      category: new FormControl(bookRawValue.category),
       wishId: new FormControl(bookRawValue.wishId),
     });
   }
 
   getBook(form: BookFormGroup): Book | NewBook {
     const raw = form.getRawValue();
-    // Map nulls to undefined for optional fields where appropriate
+
     const rating = raw.rating === null ? undefined : raw.rating;
-    const categoryId = raw.categoryId === null ? undefined : raw.categoryId;
+    const categoryId = raw.category ? raw.category.id : undefined;
     const wishId = raw.wishId === null ? undefined : raw.wishId;
 
     if (raw.id === null) {
@@ -92,8 +84,9 @@ export class BookFormService {
     return updated;
   }
 
-  resetForm(form: BookFormGroup, book: BookFormGroupInput): void {
+  resetForm(form: BookFormGroup, book: BookFormGroupInput, category: Category | null): void {
     const bookRawValue = { ...this.getFormDefaults(), ...book };
+
     form.reset({
       id: { value: bookRawValue.id, disabled: true },
       title: bookRawValue.title ?? '',
@@ -102,7 +95,7 @@ export class BookFormService {
       notes: bookRawValue.notes,
       isFavorite: bookRawValue.isFavorite,
       wasRead: bookRawValue.wasRead,
-      categoryId: bookRawValue.categoryId,
+      category: category, // handle both category object or categoryId
       wishId: bookRawValue.wishId,
     } as any);
   }
@@ -110,13 +103,13 @@ export class BookFormService {
   private getFormDefaults(): BookFormDefaults {
     return {
       id: null,
-      title: '' as any, // will be overridden if provided
-      author: '' as any, // will be overridden if provided
+      title: '' as any,
+      author: '' as any,
       rating: null,
       notes: '',
       isFavorite: false,
       wasRead: false,
-      categoryId: null,
+      category: null,
       wishId: null,
     } as BookFormDefaults & { title: string; author: string };
   }
