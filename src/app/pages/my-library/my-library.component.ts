@@ -107,8 +107,17 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
   }
 
   protected filterByRead(): void {
-    this.bookFilter.wasRead = this.bookFilter.wasRead ? undefined : true;
+    this.bookFilter.wasRead = this.bookFilter.wasRead === undefined ?
+      true
+      : (this.bookFilter.wasRead ? false : undefined);
     this.loadBooks();
+  }
+
+  protected getWasReadIcon(): string {
+    if (this.bookFilter.wasRead === undefined) {
+      return 'pi pi-eye-slash'
+    }
+    return this.bookFilter.wasRead ? 'pi pi-check-circle' : 'pi pi-times-circle';
   }
 
   protected deleteBook($bookEvent: { book: Book, event: Event }): void {

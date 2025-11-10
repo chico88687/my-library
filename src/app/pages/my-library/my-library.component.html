@@ -20,7 +20,7 @@
           <div class="flex justify-content-start gap-1">
             <p-button size="small"
                       [severity]="bookFilter.wasRead ? 'success' : 'secondary'"
-                      [icon]="!bookFilter.wasRead ? 'pi pi-times-circle' : 'pi pi-check-circle'"
+                      [icon]="getWasReadIcon()"
                       [outlined]="true"
                       (onClick)="filterByRead()"/>
             <p-button size="small"
