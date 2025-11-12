@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { WishListItem } from '../../database/tables/wish-list-item';
+import {Injectable} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {WishListItem} from '../../database/tables/wish-list-item';
+import {Category} from '../../database/tables/category';
 
 /** Utility type that makes all fields optional except the required key `id`. */
 type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>> & { id: T['id'] };
@@ -15,10 +16,11 @@ export type NewWishListItem = Omit<WishListItem, 'id'> & { id: null };
 export type WishListItemFormGroupInput = WishListItem | PartialWithRequiredKeyOf<NewWishListItem>;
 
 /** Defaults applied when creating or resetting the form. */
-export type WishListItemFormDefaults = Pick<NewWishListItem, 'id'> & {
+export type WishListItemFormDefaults = Pick<NewWishListItem, 'id' | 'added'> & {
   notes: string;
-  categoryId: number | null;
+  category: Category | null;
   bookId: number | null;
+  why: string;
 };
 
 export type WishListItemFormGroupContent = {
@@ -26,8 +28,10 @@ export type WishListItemFormGroupContent = {
   title: FormControl<WishListItem['title']>;
   author: FormControl<WishListItem['author']>;
   description: FormControl<WishListItem['description']>;
+  why: FormControl<NonNullable<WishListItem['why']>>;
   notes: FormControl<NonNullable<WishListItem['notes']>>;
-  categoryId: FormControl<WishListItem['categoryId'] | null>;
+  added: FormControl<WishListItem['added']>;
+  category: FormControl<Category | null>;
   bookId: FormControl<WishListItem['bookId'] | null>;
 };
 
@@ -36,15 +40,17 @@ export type WishListItemFormGroup = FormGroup<WishListItemFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class WishListItemFormService {
   createWishListItemFormGroup(item: WishListItemFormGroupInput = { id: null }): WishListItemFormGroup {
-    const rawValue = { ...this.getFormDefaults(), ...item };
+    const rawValue = { ...this.getFormDefaults(), ...item } as any;
 
     return new FormGroup<WishListItemFormGroupContent>({
       id: new FormControl({ value: rawValue.id, disabled: true }),
       title: new FormControl(rawValue.title ?? '', { nonNullable: true, validators: [Validators.required] }),
       author: new FormControl(rawValue.author ?? '', { nonNullable: true, validators: [Validators.required] }),
-      description: new FormControl(rawValue.description ?? '', { nonNullable: true, validators: [Validators.required] }),
+      description: new FormControl(rawValue.description ?? ''),
+      why: new FormControl(rawValue.why ?? ''),
       notes: new FormControl(rawValue.notes, { nonNullable: true }),
-      categoryId: new FormControl(rawValue.categoryId),
+      added: new FormControl(rawValue.added, { nonNullable: true }),
+      category: new FormControl(rawValue.category),
       bookId: new FormControl(rawValue.bookId),
     });
   }
@@ -52,44 +58,50 @@ export class WishListItemFormService {
   getWishListItem(form: WishListItemFormGroup): WishListItem | NewWishListItem {
     const raw = form.getRawValue();
 
-    const categoryId = raw.categoryId === null ? undefined : raw.categoryId;
+    const categoryId = raw.category ? raw.category.id : undefined;
     const bookId = raw.bookId === null ? undefined : raw.bookId;
     const notes = raw.notes === '' ? undefined : raw.notes;
+    const why = raw.why === '' ? undefined : raw.why;
+    const description = raw.description === '' ? undefined : raw.description;
 
     if (raw.id === null) {
-      const created: NewWishListItem = {
+      return {
         id: null,
         title: raw.title,
         author: raw.author,
-        description: raw.description,
+        description,
+        why,
         notes,
+        added: raw.added,
         categoryId,
         bookId,
       };
-      return created;
     }
 
-    const updated: WishListItem = {
+    return {
       id: raw.id as number,
       title: raw.title,
       author: raw.author,
-      description: raw.description,
+      description,
+      why,
       notes,
+      added: raw.added,
       categoryId,
       bookId,
     };
-    return updated;
   }
 
-  resetForm(form: WishListItemFormGroup, item: WishListItemFormGroupInput): void {
-    const rawValue = { ...this.getFormDefaults(), ...item };
+  resetForm(form: WishListItemFormGroup, item: WishListItemFormGroupInput, category: Category | null = null): void {
+    const rawValue = { ...this.getFormDefaults(), ...item } as any;
     form.reset({
       id: { value: rawValue.id, disabled: true },
       title: rawValue.title ?? '',
       author: rawValue.author ?? '',
       description: rawValue.description ?? '',
+      why: rawValue.why ?? '',
       notes: rawValue.notes,
-      categoryId: rawValue.categoryId,
+      added: rawValue.added,
+      category: category,
       bookId: rawValue.bookId,
     } as any);
   }
@@ -98,8 +110,10 @@ export class WishListItemFormService {
     return {
       id: null,
       notes: '',
-      categoryId: null,
+      added: false,
+      category: null,
       bookId: null,
+      why: '',
     };
   }
 }

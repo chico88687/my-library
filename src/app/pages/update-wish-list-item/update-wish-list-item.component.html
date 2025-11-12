@@ -1,0 +1,81 @@
+<div class="p-3">
+  <div class="text-2xl font-semibold mb-3">{{ isUpdate ? 'Update Wish' : 'New Wish' }}</div>
+
+  <div class="flex justify-content-center mb-2">
+    <div class="flex flex-column align-items-center gap-1">
+      <book-avatar/>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+    <!-- Title -->
+    <div class="col-12 mb-2">
+      <label for="title" class="block mb-2">Title<span class="text-red-500">*</span></label>
+      <input id="title" type="text" pInputText formControlName="title" placeholder="Enter title" class="w-full"/>
+      <div class="text-red-500 text-sm mt-1"
+           *ngIf="form.get('title')?.invalid && (form.get('title')?.dirty || form.get('title')?.touched)">
+        Title is required.
+      </div>
+    </div>
+
+    <!-- Author -->
+    <div class="col-12 mb-2">
+      <label for="author" class="block mb-2">Author<span class="text-red-500">*</span></label>
+      <input id="author" type="text" pInputText formControlName="author" placeholder="Enter author" class="w-full"/>
+      <div class="text-red-500 text-sm mt-1"
+           *ngIf="form.get('author')?.invalid && (form.get('author')?.dirty || form.get('author')?.touched)">
+        Author is required.
+      </div>
+    </div>
+
+    <!--Category-->
+    <div class="col-12 mb-3">
+      <div class="flex justify-content-start">
+        <label for="filter_button" class="block mb-2">Category</label>
+      </div>
+      <div>
+        <p-auto-complete formControlName="category"
+                         [suggestions]="filteredCategories"
+                         (completeMethod)="filterCategories($event)"
+                         optionLabel="name"
+                         [dropdown]="true"
+                         [showClear]="true"/>
+      </div>
+    </div>
+
+    <!-- Added toggle -->
+    <div class="col-12 mb-3">
+      <div class="flex align-items-center gap-2">
+        <span>Added to Library</span>
+        <p-button [severity]="form.get('added')?.value ? 'success' : 'secondary'"
+                  [icon]="!form.get('added')?.value ? 'pi pi-times-circle' : 'pi pi-check-circle'"
+                  [text]="true"
+                  [rounded]="true"
+                  (onClick)="changeAdded()"/>
+      </div>
+    </div>
+
+    <!-- Why -->
+    <div class="col-12">
+      <label for="why" class="block mb-2">Why</label>
+      <textarea id="why" pTextarea formControlName="why" rows="3" class="w-full"></textarea>
+    </div>
+
+    <!-- Description -->
+    <div class="col-12">
+      <label for="description" class="block mb-2">Description</label>
+      <textarea id="description" pTextarea formControlName="description" rows="4" class="w-full"></textarea>
+    </div>
+
+    <!-- Notes -->
+    <div class="col-12">
+      <label for="notes" class="block mb-2">Notes</label>
+      <textarea id="notes" pTextarea formControlName="notes" rows="5" class="w-full"></textarea>
+    </div>
+
+    <!-- Save Button -->
+    <div class="col-12 mb-4">
+      <button pButton type="submit" label="Save" [disabled]="!canSave" class="w-full"></button>
+    </div>
+  </form>
+</div>
