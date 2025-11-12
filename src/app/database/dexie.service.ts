@@ -17,7 +17,7 @@ export class DexieService extends Dexie {
     super('MyLibraryDB');
     this.version(1).stores({
       books: '++id, title, author, rating, notes, isFavorite, wasRead, categoryId, wishId',
-      wishList: '++id, title, author, description, notes, categoryId,bookId',
+      wishList: '++id, title, author, description, why, notes, added, categoryId, bookId',
       categories: '++id, name',
       userSettings: '++id, name, apiKey, limitCalls'
     });

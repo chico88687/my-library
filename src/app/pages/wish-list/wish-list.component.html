@@ -1,1 +1,52 @@
 <page-header title="Wish List"/>
+
+<div class="p-card mb-3 p-2 sticky top-0 z-5 border-round shadow-2" style="background-color: #222225; border-radius: 8px;">
+  <div class="p-grid">
+    <div class="p-col-12 p-md-6">
+      <!-- NEW: Flex container for left and right sides -->
+      <div class="flex justify-content-between align-items-center">
+        <!-- Left-->
+        <div class="flex flex-column gap-1">
+          <div class="flex flex-column mb-3 search-input">
+            <div class="flex justify-content-start">
+              <label for="search" class="text-xs font-semibold">Search</label>
+            </div>
+            <input id="search" pInputText
+                   pSize="small"
+                   placeholder="Title or Author"
+                   [(ngModel)]="bookFilter.searchTerm"
+                   (ngModelChange)="search($event)"/>
+          </div>
+          <div class="flex justify-content-start gap-1">
+            <p-button size="small"
+                      [severity]="bookFilter.wasRead ? 'success' : 'secondary'"
+                      [icon]="getWasReadIcon()"
+                      [outlined]="true"
+                      (onClick)="filterByRead()"/>
+            <p-button size="small"
+                      [severity]="bookFilter.isFavorite ? 'danger' : 'secondary'"
+                      [icon]="!bookFilter.isFavorite ? 'pi pi-heart' : 'pi pi-heart-fill'"
+                      [outlined]="true"
+                      (onClick)="filterByFavorite()"/>
+          </div>
+        </div>
+        <!-- Right-->
+        <div class="flex flex-column">
+
+          <list-options [fieldAndLabelMap]="fieldAndLabelSortMap"
+                        [sortState]="sortState"
+                        [categoryMap]="categoryIdMap"
+                        [activeFilter]="bookFilter.categoryId"
+                        (sortStateEmitter)="sortBooks($event)"
+                        (filterStateEmitter)="filterBooks($event)"/>
+          <div class="flex justify-content-end">
+            <p-button size="small" icon="pi pi-plus" [outlined]="true" [routerLink]="'/new-wish-item'"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<list-wish [wishList]=""/>
+

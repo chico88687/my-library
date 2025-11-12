@@ -1,0 +1,77 @@
+@if (isLoading) {
+  <div class="flex justify-content-center">
+    <p-progress-spinner strokeWidth="8"
+                        fill="transparent"
+                        animationDuration=".5s"
+                        [style]="{ width: '50px', height: '50px' }"/>
+  </div>
+} @else {
+  <div class="pb-6">
+    <p-dataView [value]="wishList">
+      <ng-template #list let-wishes>
+        @for (wish of wishList; track wish.id) {
+          <div class="mb-4">
+            <div class="p-card p-1" style="background-color: #222225; border-radius: 8px; width: 100%;">
+              <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                  <!-- NEW: Flex container for left and right sides -->
+                  <div class="flex justify-content-between align-items-center">
+                    <!-- Left-->
+                    <div class="flex align-items-center">
+                      <book-avatar/>
+                      <div class="flex flex-column justify-content-center ml-2">
+                        <a class="font-normal text-lg md:text-lg lg:text-xl xl:text-2xl" style="color: inherit;"
+                           [routerLink]="'/update-wish-item/' + wish.id">
+                          {{ wish.title }}
+                        </a>
+                        <span class="font-normal text-base md:text-base lg:text-lg xl:text-xl">
+                        {{ wish.author }}
+                      </span>
+                        @if (wish.categoryId && categoryIdMap) {
+                          <div>
+                            <span class="text-xs"><i class="pi pi-tag"
+                                                     style="font-size: 0.6rem"></i> {{ categoryIdMap.get(wish.categoryId)?.name }} </span>
+                          </div>
+                        }
+<!--                        <div class="mt-1">-->
+<!--                          <p-rating [ngModel]="book.rating"-->
+<!--                                    [disabled]="disableRating"-->
+<!--                                    (onRate)="changeRating(book, $event)"/>-->
+<!--                        </div>-->
+                      </div>
+                    </div>
+
+                    <!-- Right-->
+                    <div class="flex flex-column align-items-center flex-shrink-0">
+                      @if (true) {
+<!--                        <div>-->
+<!--                          <p-button [severity]="book.wasRead ? 'success' : 'secondary'"-->
+<!--                                    [icon]="!book.wasRead ? 'pi pi-times-circle' : 'pi pi-check-circle'"-->
+<!--                                    [text]="true"-->
+<!--                                    [rounded]="true"-->
+<!--                                    (onClick)="changeWasRead(book.id)"/>-->
+<!--                          <p-button-->
+<!--                            [severity]="book.isFavorite ? 'danger' : 'secondary'"-->
+<!--                            [icon]="!book.isFavorite ? 'pi pi-heart' : 'pi pi-heart-fill'"-->
+<!--                            [text]="true"-->
+<!--                            [rounded]="true"-->
+<!--                            (onClick)="changeFavorite(book.id)"/>-->
+<!--                        </div>-->
+                        <div class="flex gap-1">
+                          <p-button size="small" severity="secondary" icon="pi pi-pencil" [outlined]="true"
+                                    [rounded]="true" [routerLink]="'/update-wish-item/' + wish.id"/>
+                          <p-button size="small" severity="secondary" icon="pi pi-trash" [outlined]="true"
+                                    [rounded]="true" (onClick)="deleteWishItem(wish, $event)"/>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </ng-template>
+    </p-dataView>
+  </div>
+}
