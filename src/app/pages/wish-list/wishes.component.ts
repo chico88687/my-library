@@ -1,28 +1,26 @@
 import {Component} from '@angular/core';
 import {PageHeaderComponent} from '../../shared/page-header/page-header.component';
-import {BookListComponent} from '../../shared/book-list/book-list.component';
 import {Button} from 'primeng/button';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {ListOptionsComponent} from '../../shared/list-options/list-options.component';
 import {RouterLink} from '@angular/router';
-import {ListWishComponent} from '../../shared/list-wish/list-wish.component';
+import {WishListComponent} from '../../shared/list-wish/wish-list.component';
 
 @Component({
   standalone: true,
-  selector: 'wish-list',
-  templateUrl: './wish-list.component.html',
+  selector: 'wishes-component',
+  templateUrl: './wishes.component.html',
   imports: [
     PageHeaderComponent,
-    BookListComponent,
     Button,
     FormsModule,
     InputText,
     ListOptionsComponent,
     RouterLink,
-    ListWishComponent
+    WishListComponent
   ]
 })
-export class WishListComponent {
+export class WishesComponent {
 
 }

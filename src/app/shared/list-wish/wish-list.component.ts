@@ -9,8 +9,8 @@ import {Category} from '../../database/tables/category';
 
 @Component({
   standalone: true,
-  selector: 'list-wish',
-  templateUrl: './list-wish.component.html',
+  selector: 'wish-list',
+  templateUrl: './wish-list.component.html',
   imports: [
     BookAvatarComponent,
     Button,
@@ -19,7 +19,7 @@ import {Category} from '../../database/tables/category';
     RouterLink
   ]
 })
-export class ListWishComponent {
+export class WishListComponent {
 
   @Input() wishList: WishListItem[] = [];
   @Input() isLoading: boolean = false;
