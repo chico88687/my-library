@@ -22,7 +22,13 @@
   .p-floatlabel {
     width: 65% !important;
   }
+
   .p-inputtext {
     width: 75% !important;
   }
+}
+
+.long-button {
+  min-width: 4rem;
+  max-height: 2rem
 }

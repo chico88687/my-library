@@ -5,8 +5,6 @@ import {ImportService} from '../../service/data-management/import/import.service
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {AlertService} from '../../service/alert/alert.service';
 import {ExportService} from '../../service/data-management/export/export.service';
-import {DataDeleteService} from '../../service/data-management/data-delete.service';
-import {ConfirmationService} from 'primeng/api';
 
 @Component({
   standalone: true,
