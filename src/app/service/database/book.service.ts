@@ -150,4 +150,9 @@ export class BookService {
     const message = book.title + ' has been deleted';
     this.alertService.addAlert('secondary', 'Book', message);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.db.books.clear();
+    this.alertService.addAlert('secondary', 'All books have been deleted');
+  }
 }

@@ -39,4 +39,9 @@ export class CategoryService {
     const message = `${category.name} has been deleted`;
     this.alertService.addAlert('secondary', message);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.db.categories.clear();
+    this.alertService.addAlert('secondary', 'All categories have been deleted');
+  }
 }

@@ -93,4 +93,9 @@ export class WishListItemService {
     const message = `${item.title} has been deleted`;
     this.alertService.addAlert('secondary', 'Wish List', message);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.db.wishListItems.clear();
+    this.alertService.addAlert('secondary', 'All wish list items have been deleted',);
+  }
 }
