@@ -49,10 +49,18 @@
           </p-cellEditor>
         </td>
         <td>
-          {{ categoryWithBookNumber.stats.numberOfBooks }}
+          <a class="font-normal text-lg md:text-lg lg:text-xl xl:text-2xl" style="color: inherit;"
+             [routerLink]="'/my-library'"
+             [state]="{ bookFilter: { categoryId: categoryWithBookNumber.id} }">
+            {{ categoryWithBookNumber.stats.numberOfBooks }}
+          </a>
         </td>
         <td>
-          {{ categoryWithBookNumber.stats.numberOfWishes }}
+          <a class="font-normal text-lg md:text-lg lg:text-xl xl:text-2xl" style="color: inherit;"
+             [routerLink]="'/wish-list'"
+             [state]="{ wishListFilter: { categoryId: categoryWithBookNumber.id} }">
+            {{ categoryWithBookNumber.stats.numberOfWishes }}
+          </a>
         </td>
         <td>
           <div class="flex items-center justify-center gap-2">

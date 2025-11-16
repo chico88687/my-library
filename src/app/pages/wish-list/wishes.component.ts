@@ -47,6 +47,7 @@ export class WishesComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    this.wishFilter = history.state["wishFilter"] ?? { added: false };
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe(() => this.loadWishes());

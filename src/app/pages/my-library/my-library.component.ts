@@ -20,7 +20,6 @@ import {CategoryService} from '../../service/database/category.service';
   standalone: true,
   selector: 'my-library',
   templateUrl: './my-library.component.html',
-  styleUrls: ['./my-library.component.scss'],
   imports: [TableModule, BookListComponent, Button, RouterLink, ConfirmDialog, ListOptionsComponent, FormsModule, InputText, PageHeaderComponent],
   providers: [ConfirmationService]
 })
@@ -45,6 +44,7 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    this.bookFilter = history.state["bookFilter"] ?? {};
     this.searchSubject
       .pipe(
         debounceTime(300), // wait 300 ms after the user stops typing

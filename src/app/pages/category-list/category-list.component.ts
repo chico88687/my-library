@@ -11,6 +11,7 @@ import {InputText} from 'primeng/inputtext';
 import {Ripple} from 'primeng/ripple';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {WishListItemService} from '../../service/database/wish-list-item.service';
+import {RouterLink} from '@angular/router';
 
 export type CategoryWithNumberOfBooks = {
   id?: number;
@@ -35,7 +36,8 @@ export type CategoryStats = {
     InputText,
     ButtonDirective,
     Ripple,
-    ConfirmDialog
+    ConfirmDialog,
+    RouterLink
   ],
   providers: [ConfirmationService]
 })
