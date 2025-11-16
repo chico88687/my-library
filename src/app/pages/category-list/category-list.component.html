@@ -12,12 +12,22 @@
     <ng-template #header>
       <tr>
         <th id="category" pSortableColumn="category.name">
-          Category
+          <span class="text-sm">
+            Category
           <p-sortIcon field="category.name"/>
+          </span>
         </th>
-        <th id="numberOfBooks" pSortableColumn="numberOfBooks">
-          Nº of books
-          <p-sortIcon field="numberOfBooks"/>
+        <th id="numberOfBooks" pSortableColumn="stats.numberOfBooks">
+          <span class="text-sm">
+            Nº of books
+          <p-sortIcon class="text-sm" field="stats.numberOfBooks"/>
+          </span>
+        </th>
+        <th id="numberOfWishes" pSortableColumn="stats.numberOfWishes">
+          <span class="text-sm">
+            Nº of wishes
+          <p-sortIcon class="text-sm" field="stats.numberOfWishes"/>
+          </span>
         </th>
         <th id="buttons"></th>
       </tr>
@@ -39,7 +49,10 @@
           </p-cellEditor>
         </td>
         <td>
-          {{ categoryWithBookNumber.numberOfBooks }}
+          {{ categoryWithBookNumber.stats.numberOfBooks }}
+        </td>
+        <td>
+          {{ categoryWithBookNumber.stats.numberOfWishes }}
         </td>
         <td>
           <div class="flex items-center justify-center gap-2">

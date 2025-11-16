@@ -10,12 +10,18 @@ import {Button, ButtonDirective} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
 import {Ripple} from 'primeng/ripple';
 import {ConfirmDialog} from 'primeng/confirmdialog';
+import {WishListItemService} from '../../service/database/wish-list-item.service';
 
 export type CategoryWithNumberOfBooks = {
   id?: number;
   category: Category;
-  numberOfBooks: number;
+  stats: CategoryStats;
 };
+
+export type CategoryStats = {
+  numberOfBooks: number;
+  numberOfWishes: number;
+}
 
 @Component({
   standalone: true,
@@ -38,7 +44,7 @@ export class CategoryListComponent implements OnInit {
   @ViewChild(Table) table!: Table;
 
   categories: Category[] = [];
-  categoryIdAndNumberOfBooksMap: Map<number, number> = new Map();
+  categoryIdAndStatsMap: Map<number, { numberOfBooks: number, numberOfWishes: number }> = new Map();
 
   categoriesWithCounts: CategoryWithNumberOfBooks[] = [];
 
@@ -49,6 +55,7 @@ export class CategoryListComponent implements OnInit {
 
   protected readonly categoryService = inject(CategoryService);
   protected readonly bookService = inject(BookService);
+  protected readonly wishListItemService = inject(WishListItemService);
   protected readonly confirmationService = inject(ConfirmationService);
 
   ngOnInit(): void {
@@ -57,12 +64,14 @@ export class CategoryListComponent implements OnInit {
 
   addCategory(): void {
     const isNewRowAlready = this.categoriesWithCounts.some(c => !c.id);
-    if (isNewRowAlready) return;
+    if (isNewRowAlready) {
+      return;
+    }
 
     const newCategory: CategoryWithNumberOfBooks = {
       id: undefined,
-      category: { id: undefined, name: '' },
-      numberOfBooks: 0
+      category: {id: undefined, name: ''},
+      stats: {numberOfWishes: 0, numberOfBooks: 0}
     };
 
     this.categoriesWithCounts = [newCategory, ...this.categoriesWithCounts];
@@ -76,7 +85,7 @@ export class CategoryListComponent implements OnInit {
     const key = category.id != null ? String(category.id) : `__tmp__${this.tempRowCounter ?? 0}`;
     // If it's a temporary row with no id we still want to store a clone,
     // so create a temp counter key (optional — we mainly need clones for existing rows).
-    this.clonedCategories[key] = { ...category };
+    this.clonedCategories[key] = {...category};
   }
 
 
@@ -131,7 +140,7 @@ export class CategoryListComponent implements OnInit {
         severity: 'danger',
       },
       accept: () => {
-        void this.categoryService.delete(category);
+        this.categoryService.delete(category).then();
         void this.loadData();
       },
     });
@@ -141,24 +150,30 @@ export class CategoryListComponent implements OnInit {
     this.isLoading = true;
 
     const categories = await this.categoryService.getAll();
-    this.categoryIdAndNumberOfBooksMap = await this.buildCategoryMap();
+    this.categories = categories;
+    this.categoryIdAndStatsMap = await this.buildCategoryMap();
 
     this.categoriesWithCounts = categories.map(c => ({
       id: c.id,
       category: c,
-      numberOfBooks: this.categoryIdAndNumberOfBooksMap.get(c.id!) ?? 0
+      stats: this.categoryIdAndStatsMap.get(c.id ?? -1) ?? {numberOfBooks: 0, numberOfWishes: 0},
     }));
 
     this.isLoading = false;
   }
 
-  private async buildCategoryMap(): Promise<Map<number, number>> {
-    const categoryAndNumberOfBooksMap = new Map<number, number>();
+  private async buildCategoryMap(): Promise<Map<number, CategoryStats>> {
+    const categoryAndNumberOfBooksMap = new Map<number, CategoryStats>();
 
     for (const category of this.categories) {
       const categoryId = category.id!;
       const numberOfBooks = await this.bookService.countByCategoryId(categoryId);
-      categoryAndNumberOfBooksMap.set(categoryId, numberOfBooks);
+      const numberOfWishes = await this.wishListItemService.countByCategoryId(categoryId);
+      const stats = {
+        numberOfBooks: numberOfBooks,
+        numberOfWishes: numberOfWishes,
+      };
+      categoryAndNumberOfBooksMap.set(categoryId, stats);
     }
 
     return categoryAndNumberOfBooksMap;

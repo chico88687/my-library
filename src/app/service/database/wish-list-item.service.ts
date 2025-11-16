@@ -81,6 +81,13 @@ export class WishListItemService {
     return updated;
   }
 
+  async countByCategoryId(categoryId: number): Promise<number> {
+    return this.db.wishListItems
+      .where('categoryId')
+      .equals(categoryId)
+      .count();
+  }
+
   async deleteByEntity(item: WishListItem): Promise<void> {
     await this.db.wishListItems.delete(item.id!);
     const message = `${item.title} has been deleted`;
