@@ -36,7 +36,7 @@ export class WishesComponent implements OnInit, OnDestroy {
   fieldAndLabelSortMap: Map<string, string> = new Map();
   categoryIdMap?: Map<number, Category>;
   sortState: SortState = {predicate: 'title', order: 'asc'};
-  wishFilter: WishListFilter = { added: false };
+  wishFilter: WishListFilter = {added: false};
   isLoading = false;
 
   private readonly wishService = inject(WishListItemService);
@@ -47,7 +47,7 @@ export class WishesComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.wishFilter = history.state["wishFilter"] ?? { added: false };
+    this.wishFilter = history.state["wishFilter"] ?? {added: false};
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe(() => this.loadWishes());
@@ -75,12 +75,12 @@ export class WishesComponent implements OnInit, OnDestroy {
   }
 
   protected filterWishesByCategory(categoryId?: number): void {
-    this.wishFilter = { ...this.wishFilter, categoryId };
+    this.wishFilter = {...this.wishFilter, categoryId};
     this.loadWishes();
   }
 
   protected search(value: string): void {
-    this.wishFilter = { ...this.wishFilter, searchTerm: value };
+    this.wishFilter = {...this.wishFilter, searchTerm: value};
     this.searchSubject.next(value);
   }
 
@@ -109,8 +109,8 @@ export class WishesComponent implements OnInit, OnDestroy {
       target: event.target as EventTarget,
       message,
       icon: 'pi pi-exclamation-triangle',
-      rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
-      acceptButtonProps: { label: 'Delete', severity: 'danger' },
+      rejectButtonProps: {label: 'Cancel', severity: 'secondary', outlined: true},
+      acceptButtonProps: {label: 'Delete', severity: 'danger'},
       accept: () => {
         void this.wishService.deleteByEntity(wish);
         this.loadWishes();
