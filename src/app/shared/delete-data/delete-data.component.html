@@ -1,0 +1,19 @@
+@if (isLoading) {
+  <div class="flex justify-content-center">
+    <p-progress-spinner strokeWidth="8"
+                        fill="transparent"
+                        animationDuration=".5s"
+                        [style]="{ width: '50px', height: '50px' }"/>
+  </div>
+} @else {
+  <div class="mb-2">
+    <span class="text-2xl">Delete Data</span>
+  </div>
+  <div class="p-card mb-3 p-3" style="background-color: #222225; border-radius: 8px;">
+    <div class="flex justify-content-center gap-2">
+      <p-button label="Delete Content Data" (onClick)="confirmContentDataDelete($event)" severity="danger"/>
+      <p-button label="Delete App Data" (onClick)="confirmAppDataDelete($event)" severity="danger"/>
+    </div>
+  </div>
+}
+<p-confirmDialog [position]="'bottom'"/>

@@ -5,9 +5,8 @@ import {ImportService} from '../../service/data-management/import/import.service
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {AlertService} from '../../service/alert/alert.service';
 import {ExportService} from '../../service/data-management/export/export.service';
-import {DataManagementService} from '../../service/data-management/data-management.service';
+import {DataDeleteService} from '../../service/data-management/data-delete.service';
 import {ConfirmationService} from 'primeng/api';
-import {ConfirmDialog} from 'primeng/confirmdialog';
 
 @Component({
   standalone: true,
@@ -16,10 +15,8 @@ import {ConfirmDialog} from 'primeng/confirmdialog';
   imports: [
     Button,
     FileUpload,
-    ProgressSpinner,
-    ConfirmDialog
+    ProgressSpinner
   ],
-  providers: [ConfirmationService]
 })
 export class DataManagementComponent {
 
@@ -29,8 +26,6 @@ export class DataManagementComponent {
   private readonly importService: ImportService = inject(ImportService);
   private readonly exportService: ExportService = inject(ExportService);
   private readonly alertService: AlertService = inject(AlertService);
-  private readonly dataManagementService = inject(DataManagementService);
-  private readonly confirmationService = inject(ConfirmationService);
 
   protected async import($event: FileUploadHandlerEvent): Promise<void> {
     this.isLoading = true;
@@ -64,32 +59,5 @@ export class DataManagementComponent {
       }
       this.isLoading = false
     }
-  }
-
-  protected confirmDelete(event: Event): void {
-    const message = 'Are you sure you want to proceed? This will delete all Books, Wish List Items and Categories';
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message,
-      icon: 'pi pi-exclamation-triangle',
-      rejectButtonProps: {
-        label: 'Cancel',
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: 'Delete',
-        severity: 'danger',
-      },
-      accept: () => {
-        void this.deleteAllData()
-      },
-    });
-  }
-
-  protected async deleteAllData(): Promise<void> {
-    this.isLoading = true;
-    await this.dataManagementService.deleteAllContentTables();
-    this.isLoading = false
   }
 }

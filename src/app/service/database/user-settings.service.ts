@@ -1,12 +1,14 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {DexieService} from '../../database/dexie.service';
 import {UserSettings} from '../../database/tables/user-settings';
+import {AlertService} from '../alert/alert.service';
 
 @Injectable({providedIn: 'root'})
 export class UserSettingsService {
 
   db: DexieService = inject(DexieService);
   userExists = signal(false);
+  private readonly alertService: AlertService = inject(AlertService);
 
   async initialize(): Promise<void> {
     const exists = await this.checkUser();
@@ -44,5 +46,11 @@ export class UserSettingsService {
       throw new Error('No existing user to update.');
     }
     return this.db.userSettings.update(existingUser.id, changes);
+  }
+
+  async deleteAll(): Promise<void> {
+    await this.db.userSettings.clear();
+    this.userExists.set(false);
+    this.alertService.addAlert('secondary', 'App user was deleted');
   }
 }
