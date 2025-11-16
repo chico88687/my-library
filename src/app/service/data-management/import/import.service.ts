@@ -1,10 +1,10 @@
 import {inject, Injectable} from '@angular/core';
-import {BookService} from '../database/book.service';
-import {WishListItemService} from '../database/wish-list-item.service';
-import {CategoryService} from '../database/category.service';
-import {AlertService} from '../alert/alert.service';
+import {BookService} from '../../database/book.service';
+import {WishListItemService} from '../../database/wish-list-item.service';
+import {CategoryService} from '../../database/category.service';
+import {AlertService} from '../../alert/alert.service';
 import Papa from "papaparse";
-import {Book} from '../../database/tables/book';
+import {Book} from '../../../database/tables/book';
 
 @Injectable({providedIn: 'root'})
 export class ImportService {
