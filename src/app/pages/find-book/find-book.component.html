@@ -1,1 +1,18 @@
-FindBook
+<div class="flex justify-content-center align-items-center h-screen w-screen">
+  <div class="flex flex-column gap-3">
+    <textarea pTextarea [(ngModel)]="prompt"></textarea>
+
+    <p-button label="Send" (onClick)="send()"/>
+
+
+    @if (loading) {
+      <div>Loading…</div>
+    }
+    @if (result) {
+      <textarea pTextarea [value]="result | json" autoResize="true"></textarea>
+    }
+    @if (error) {
+      <div class="text-red-500">{{ error }}</div>
+    }
+  </div>
+</div>

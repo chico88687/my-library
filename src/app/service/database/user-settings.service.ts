@@ -16,7 +16,7 @@ export class UserSettingsService {
   }
 
   /** Returns the single user or undefined if not found */
-  getUser() {
+  async getUser():Promise<UserSettings | undefined> {
     return this.db.userSettings.toCollection().first();
   }
 
