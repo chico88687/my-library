@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import Papa from 'papaparse';
 import {BookService} from '../../database/book.service';
 import {AlertService} from '../../alert/alert.service';
@@ -8,6 +8,9 @@ import {WishListItem} from '../../../database/tables/wish-list-item';
 import {CategoryService} from '../../database/category.service';
 import {Category} from '../../../database/tables/category';
 import {UserSettingsService} from '../../database/user-settings.service';
+import {Share} from '@capacitor/share';
+import {Directory, Encoding, Filesystem} from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({ providedIn: 'root' })
 export class ExportService {
@@ -52,7 +55,7 @@ export class ExportService {
 
       // Trigger file download
       const filename = await this.buildExportFileName('Books');
-      this.triggerDownload(csv, filename);
+      await this.triggerDownload(csv, filename);
 
       this.alertService.addAlert(
         'success',
@@ -89,7 +92,7 @@ export class ExportService {
       }));
       const csv = Papa.unparse(rows, { header: true });
       const filename = await this.buildExportFileName('Wish List');
-      this.triggerDownload(csv, filename);
+      await this.triggerDownload(csv, filename);
       this.alertService.addAlert('success', 'Export completed', `${wishes.length} wish list items exported successfully.`);
     } catch (e) {
       console.error(e);
@@ -110,7 +113,7 @@ export class ExportService {
       }));
       const csv = Papa.unparse(rows, { header: true });
       const filename = await this.buildExportFileName('Categories');
-      this.triggerDownload(csv, filename);
+      await this.triggerDownload(csv, filename);
       this.alertService.addAlert('success', 'Export completed', `${categories.length} categories exported successfully.`);
     } catch (e) {
       console.error(e);
@@ -119,21 +122,57 @@ export class ExportService {
   }
 
   /**
-   * Creates a download action for a text file (CSV).
+   * Saves/exports a CSV file.
+   * - On web: triggers a browser download via anchor.
+   * - On native (Android/iOS): writes to Documents and opens the share sheet.
    */
-  private triggerDownload(data: string, filename: string): void {
-    const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
+  private async triggerDownload(data: string, filename: string): Promise<void> {
+    const platform = Capacitor.getPlatform();
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
+    if (platform === 'web') {
+      // Browser environment – use an anchor to download
+      const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
 
-    // Needed for Android / Capacitor WebView compatibility
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    // Native (Android/iOS) – use Capacitor Filesystem and Share
+    try {
+      const writeResult = await Filesystem.writeFile({
+        path: filename,
+        data: data,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+        recursive: true,
+      });
+
+      await Share.share({
+        title: 'CSV Export',
+        text: 'Here is your CSV file',
+        url: writeResult.uri,
+        dialogTitle: 'Save CSV'
+      });
+    } catch (err) {
+      console.error('Failed to export via Capacitor:', err);
+      // Fallback: attempt browser-style download even on native WebView
+      const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
   }
 
   private async buildExportFileName(entity: string): Promise<string> {
