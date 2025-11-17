@@ -60,6 +60,14 @@ export class ExportService {
     }
   }
 
+  async exportWishListItems(): Promise<void> {
+
+  }
+
+  async exportCategories(): Promise<void> {
+
+  }
+
   /**
    * Creates a download action for a text file (CSV).
    */

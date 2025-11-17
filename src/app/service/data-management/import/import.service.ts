@@ -15,6 +15,7 @@ export class ImportService {
   private readonly alertService = inject(AlertService);
 
   async importBooks(file: File): Promise<number> {
+    console.log('Importing books from file:', file.name);
     // Validate file type
     if (!/\.(csv|txt)$/i.exec(file.name)) {
       this.alertService.addAlert('error', 'Invalid file', 'Only CSV or TXT files are allowed.');
@@ -94,5 +95,13 @@ export class ImportService {
 
     this.alertService.addAlert('success', 'Import completed', `${booksData.length} books imported successfully.`);
     return booksData.length;
+  }
+
+  async importWishListItems(file: File): Promise<number> {
+    return 0;
+  }
+
+  async importCategories(file: File): Promise<number> {
+    return 0;
   }
 }

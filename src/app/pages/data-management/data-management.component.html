@@ -19,12 +19,13 @@
         <div class="col">
           <div class="flex justify-content-center gap-2">
             <p-fileupload mode="basic"
-                          chooseIcon="pi pi-upload"
+                          chooseIcon="pi pi-file-import"
+                          [chooseLabel]="'Import'"
                           accept=".csv,.txt"
                           maxFileSize="10485760"
-                          (onSelect)="import($event)"
+                          (onSelect)="import($event, entity)"
                           [auto]="true"/>
-            <p-button label="Export {{entity}}" (onClick)="export()"/>
+            <p-button icon="pi pi-file-export" label="Export" (onClick)="export()"/>
           </div>
         </div>
       </div>
