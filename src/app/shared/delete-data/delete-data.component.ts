@@ -78,7 +78,7 @@ export class DeleteDataComponent {
     this.isLoading = true;
     this.dataManagementService.deleteAllAppData().then(() => {
       this.isLoading = false;
-      void this.router.navigate(['/']);
+      void this.router.navigate(['/set-up-user']);
     });
   }
 }
