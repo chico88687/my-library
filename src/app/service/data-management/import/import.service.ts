@@ -60,20 +60,6 @@ export class ImportService {
       wishId: row.wishId ?? undefined,
     }));
 
-    // Parallel check for categoryId and wishId existence
-    await Promise.all(
-      booksData.map(async (book) => {
-        if (book.categoryId) {
-          const category = await this.categoryListService.getById(book.categoryId);
-          book.categoryId = category ? book.categoryId : undefined;
-        }
-        if (book.wishId) {
-          const wish = await this.wishListService.getById(book.wishId);
-          book.wishId = wish ? book.wishId : undefined;
-        }
-      })
-    );
-
     // Get all existing books
     const existingBooks = await this.bookService.getAll();
 
@@ -135,17 +121,6 @@ export class ImportService {
       added: !!row.added,
       categoryId: row.categoryId ?? undefined,
       bookId: row.bookId ?? undefined,
-    }));
-
-    await Promise.all(items.map(async (w) => {
-      if (w.categoryId) {
-        const cat = await this.categoryListService.getById(w.categoryId);
-        w.categoryId = cat ? w.categoryId : undefined;
-      }
-      if (w.bookId) {
-        const bk = await this.bookService.getById(w.bookId);
-        w.bookId = bk ? w.bookId : undefined;
-      }
     }));
 
     const existing = await this.wishListService.getAll();
