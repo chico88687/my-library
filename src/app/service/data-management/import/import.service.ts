@@ -5,6 +5,8 @@ import {CategoryService} from '../../database/category.service';
 import {AlertService} from '../../alert/alert.service';
 import Papa from "papaparse";
 import {Book} from '../../../database/tables/book';
+import {WishListItem} from '../../../database/tables/wish-list-item';
+import {Category} from '../../../database/tables/category';
 
 @Injectable({providedIn: 'root'})
 export class ImportService {
@@ -98,10 +100,124 @@ export class ImportService {
   }
 
   async importWishListItems(file: File): Promise<number> {
-    return 0;
+    // Validate file type
+    if (!/\.(csv|txt)$/i.exec(file.name)) {
+      this.alertService.addAlert('error', 'Invalid file', 'Only CSV or TXT files are allowed.');
+      return 0;
+    }
+
+    const fileContent = await file.text();
+    const result = Papa.parse(fileContent, {
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: true,
+    });
+
+    if (result.errors.length > 0) {
+      this.alertService.addAlert('error', 'CSV parse error', result.errors.map(e => e.message).join(', '));
+      return 0;
+    }
+
+    const requiredHeaders = ['id','title','author','description','why','notes','added','categoryId','bookId'];
+    const headersValid = requiredHeaders.every(h => result.meta.fields?.includes(h));
+    if (!headersValid) {
+      this.alertService.addAlert('error', 'Invalid CSV format', 'CSV headers do not match the expected format.');
+      return 0;
+    }
+
+    const items: WishListItem[] = result.data.map((row: any) => ({
+      id: row.id ?? undefined,
+      title: row.title,
+      author: row.author,
+      description: row.description ?? undefined,
+      why: row.why ?? undefined,
+      notes: row.notes ?? undefined,
+      added: !!row.added,
+      categoryId: row.categoryId ?? undefined,
+      bookId: row.bookId ?? undefined,
+    }));
+
+    await Promise.all(items.map(async (w) => {
+      if (w.categoryId) {
+        const cat = await this.categoryListService.getById(w.categoryId);
+        w.categoryId = cat ? w.categoryId : undefined;
+      }
+      if (w.bookId) {
+        const bk = await this.bookService.getById(w.bookId);
+        w.bookId = bk ? w.bookId : undefined;
+      }
+    }));
+
+    const existing = await this.wishListService.getAll();
+
+    await Promise.all(items.map(async (w) => {
+      if (w.id) {
+        const ex = existing.find(e => e.id === w.id);
+        if (ex) {
+          await this.wishListService.update(w.id!, w);
+        } else {
+          const {id, ...data} = w as WishListItem;
+          await this.wishListService.add(data);
+        }
+      } else {
+        const {id, ...data} = w as WishListItem;
+        await this.wishListService.add(data);
+      }
+    }));
+
+    this.alertService.addAlert('success', 'Import completed', `${items.length} wish list items imported successfully.`);
+    return items.length;
   }
 
   async importCategories(file: File): Promise<number> {
-    return 0;
+    // Validate file type
+    if (!/\.(csv|txt)$/i.exec(file.name)) {
+      this.alertService.addAlert('error', 'Invalid file', 'Only CSV or TXT files are allowed.');
+      return 0;
+    }
+
+    const fileContent = await file.text();
+    const result = Papa.parse(fileContent, {
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: true,
+    });
+
+    if (result.errors.length > 0) {
+      this.alertService.addAlert('error', 'CSV parse error', result.errors.map(e => e.message).join(', '));
+      return 0;
+    }
+
+    const requiredHeaders = ['id','name'];
+    const headersValid = requiredHeaders.every(h => result.meta.fields?.includes(h));
+    if (!headersValid) {
+      this.alertService.addAlert('error', 'Invalid CSV format', 'CSV headers do not match the expected format.');
+      return 0;
+    }
+
+    const categories: Category[] = result.data.map((row: any) => ({
+      id: row.id ?? undefined,
+      name: row.name,
+    }));
+
+    const existing = await this.categoryListService.getAll();
+
+    await Promise.all(categories.map(async (c) => {
+      if (c.id) {
+        const ex = existing.find(e => e.id === c.id);
+        if (ex) {
+          await this.categoryListService.update(c.id!, c);
+        } else {
+          const {id, ...data} = c as Category;
+          await this.categoryListService.add(data);
+        }
+      } else {
+        const {id, ...data} = c as Category;
+        await this.categoryListService.add(data);
+      }
+    }));
+
+    this.alertService.addAlert('success', 'Import completed', `${categories.length} categories imported successfully.`);
+    return categories.length;
   }
 }

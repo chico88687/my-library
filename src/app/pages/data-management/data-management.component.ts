@@ -61,7 +61,7 @@ export class DataManagementComponent implements OnInit {
   protected async export(entity: string): Promise<void> {
     this.isLoading = true;
     try {
-      await this.exportService.exportBooks();
+      await this.exportMap.get(entity)?.();
       this.isLoading = false
     } catch (error) {
       if (error instanceof Error) {
