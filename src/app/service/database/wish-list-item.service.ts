@@ -98,4 +98,16 @@ export class WishListItemService {
     await this.db.wishListItems.clear();
     this.alertService.addAlert('secondary', 'All wish list items have been deleted',);
   }
+
+  /**
+   * Inserts or updates an item preserving a provided id.
+   * Uses Dexie.put so that a new id is not generated when importing.
+   */
+  async putWithId(item: WishListItem, shouldAddAlert = false): Promise<number> {
+    const key = await this.db.wishListItems.put(item);
+    if (shouldAddAlert) {
+      this.alertService.addAlert('success', 'Wish list item saved successfully');
+    }
+    return key as number;
+  }
 }

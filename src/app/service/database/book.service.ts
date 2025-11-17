@@ -155,4 +155,16 @@ export class BookService {
     await this.db.books.clear();
     this.alertService.addAlert('secondary', 'All books have been deleted');
   }
+
+  /**
+   * Inserts or updates a book preserving a provided id.
+   * Uses Dexie.put so that if the id doesn't exist, the book is inserted with that id (no new id generated).
+   */
+  async putWithId(book: Book, shouldAddAlert = false): Promise<number> {
+    const key = await this.db.books.put(book);
+    if (shouldAddAlert) {
+      this.alertService.addAlert('success', 'Book saved', 'Book saved successfully');
+    }
+    return key as number;
+  }
 }

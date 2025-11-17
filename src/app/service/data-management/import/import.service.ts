@@ -71,8 +71,8 @@ export class ImportService {
           if (existing) {
             await this.bookService.update(book.id, book, false);
           } else {
-            const {id, ...bookData} = book;
-            await this.bookService.add(bookData, false);
+            // Preserve provided id by using put (upsert) so Dexie doesn't generate a new one
+            await this.bookService.putWithId(book, false);
           }
         } else {
           const {id, ...bookData} = book;
@@ -131,8 +131,8 @@ export class ImportService {
         if (ex) {
           await this.wishListService.update(w.id!, w);
         } else {
-          const {id, ...data} = w as WishListItem;
-          await this.wishListService.add(data);
+          // Preserve provided id by using put (upsert) so Dexie doesn't generate a new one
+          await this.wishListService.putWithId(w);
         }
       } else {
         const {id, ...data} = w as WishListItem;
@@ -183,8 +183,8 @@ export class ImportService {
         if (ex) {
           await this.categoryListService.update(c.id!, c);
         } else {
-          const {id, ...data} = c as Category;
-          await this.categoryListService.add(data);
+          // Preserve provided id by using put (upsert) so Dexie doesn't generate a new one
+          await this.categoryListService.putWithId(c);
         }
       } else {
         const {id, ...data} = c as Category;

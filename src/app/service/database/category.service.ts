@@ -44,4 +44,15 @@ export class CategoryService {
     await this.db.categories.clear();
     this.alertService.addAlert('secondary', 'All categories have been deleted');
   }
+
+  /**
+   * Inserts or updates a category preserving a provided id (no new id generation).
+   */
+  async putWithId(category: Category, shouldAddAlert = false): Promise<number> {
+    const key = await this.db.categories.put(category);
+    if (shouldAddAlert) {
+      this.alertService.addAlert('success', 'Category saved successfully');
+    }
+    return key as number;
+  }
 }
