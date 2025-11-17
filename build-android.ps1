@@ -1,0 +1,23 @@
+# --- build-android.ps1 ---
+# Stop on errors
+$ErrorActionPreference = "Stop"
+
+Write-Host "1️⃣ Cleaning old web assets..."
+if (Test-Path .\android\app\src\main\assets\public) {
+    Remove-Item -Recurse -Force .\android\app\src\main\assets\public
+}
+
+Write-Host "2️⃣ Building Angular production bundle..."
+ng build --configuration production
+
+Write-Host "3️⃣ Copying web assets to Android project..."
+npx cap copy android
+npx cap sync android
+
+Write-Host "4️⃣ Building APK (debug)..."
+cd android
+.\gradlew assembleDebug
+
+Write-Host "5️⃣ Opening APK folder..."
+Start-Process "$PWD\app\build\outputs\apk\debug"
+Write-Host "✅ Done! Find your app-debug.apk in the opened folder."

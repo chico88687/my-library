@@ -13,7 +13,7 @@ import {Rating} from 'primeng/rating';
 import {Textarea} from 'primeng/textarea';
 import {Category} from '../../database/tables/category';
 import {CategoryService} from '../../service/database/category.service';
-import {AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent} from 'primeng/autocomplete';
+import {AutoComplete, AutoCompleteCompleteEvent} from 'primeng/autocomplete';
 
 @Component({
   standalone: true,
@@ -105,15 +105,12 @@ export class UpdateBookComponent implements OnInit {
 
   protected filterCategories(event: AutoCompleteCompleteEvent): void {
     const query = event.query?.toLowerCase() ?? '';
-
-
-    if (query.length === 0 ) {
+    if (query.length === 0) {
       this.filteredCategories = this.categories;
       return;
     }
-
     this.filteredCategories = (this.categories || []).filter(category => {
-      category.name?.toLowerCase().startsWith(query)
+      return category.name?.toLowerCase().startsWith(query);
     });
   }
 }
