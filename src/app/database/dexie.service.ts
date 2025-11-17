@@ -19,7 +19,7 @@ export class DexieService extends Dexie {
       books: '++id, title, author, rating, notes, isFavorite, wasRead, categoryId, wishId',
       wishListItems: '++id, title, author, description, why, notes, added, categoryId, bookId',
       categories: '++id, name',
-      userSettings: '++id, name, apiKey, limitCalls'
+      userSettings: '++id, name, apiKey'
     });
   }
 }

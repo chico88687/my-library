@@ -5,6 +5,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {ButtonModule} from 'primeng/button';
 import {FloatLabelModule} from 'primeng/floatlabel';
+import {PasswordModule} from 'primeng/password';
 import {UserSettingsService} from '../../service/database/user-settings.service';
 import {UserSettingsFormGroup, UserSettingsFormService} from '../../service/form/user-settings.form.service';
 import {UserSettings} from '../../database/tables/user-settings';
@@ -14,7 +15,7 @@ import {Router} from '@angular/router';
   standalone: true,
   selector: 'update-user-settings',
   templateUrl: './update-user-settings.component.html',
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, FloatLabelModule]
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, FloatLabelModule, PasswordModule]
 })
 export class UpdateUserSettingsComponent implements OnInit {
   form!: UserSettingsFormGroup;

@@ -17,14 +17,12 @@ export type UserSettingsFormGroupInput = UserSettings | PartialWithRequiredKeyOf
 /** Defaults applied when creating or resetting the form. */
 export type UserSettingsFormDefaults = Pick<NewUserSettings, 'id'> & {
   apiKey: string | null;
-  limitCalls: number | null;
 };
 
 export type UserSettingsFormGroupContent = {
   id: FormControl<UserSettings['id'] | NewUserSettings['id']>;
   name: FormControl<UserSettings['name']>;
   apiKey: FormControl<UserSettings['apiKey'] | string | null>;
-  limitCalls: FormControl<UserSettings['limitCalls'] | null>;
 };
 
 export type UserSettingsFormGroup = FormGroup<UserSettingsFormGroupContent>;
@@ -38,14 +36,12 @@ export class UserSettingsFormService {
       id: new FormControl({ value: rawValue.id, disabled: true }),
       name: new FormControl(rawValue.name ?? '', { nonNullable: true, validators: [Validators.required] }),
       apiKey: new FormControl(rawValue.apiKey),
-      limitCalls: new FormControl(rawValue.limitCalls),
     });
   }
 
   getUserSettings(form: UserSettingsFormGroup): UserSettings | NewUserSettings {
     const raw = form.getRawValue();
 
-    const limitCalls = raw.limitCalls === null ? undefined : raw.limitCalls;
     const apiKey = raw.apiKey == null || raw.apiKey === '' ? undefined : raw.apiKey;
 
     if (raw.id === null) {
@@ -53,7 +49,6 @@ export class UserSettingsFormService {
         id: null,
         name: raw.name,
         apiKey,
-        limitCalls,
       };
       return created;
     }
@@ -61,8 +56,7 @@ export class UserSettingsFormService {
     const updated: UserSettings = {
       id: raw.id as number,
       name: raw.name,
-      apiKey,
-      limitCalls,
+      apiKey
     };
     return updated;
   }
@@ -73,7 +67,7 @@ export class UserSettingsFormService {
       id: { value: rawValue.id, disabled: true },
       name: rawValue.name ?? '',
       apiKey: rawValue.apiKey,
-      limitCalls: rawValue.limitCalls,
+      limitCalls: rawValue,
     } as any);
   }
 
@@ -81,7 +75,6 @@ export class UserSettingsFormService {
     return {
       id: null,
       apiKey: null,
-      limitCalls: null,
     };
   }
 }
