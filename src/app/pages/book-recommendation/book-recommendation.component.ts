@@ -14,7 +14,8 @@ import {AutoComplete, AutoCompleteCompleteEvent} from 'primeng/autocomplete';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
 import {AlertService} from '../../service/alert/alert.service';
-import {JsonPipe} from '@angular/common';
+import {InputText} from 'primeng/inputtext';
+import {WishListItemService} from '../../service/database/wish-list-item.service';
 
 @Component({
   standalone: true,
@@ -32,7 +33,7 @@ import {JsonPipe} from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     Textarea,
-    JsonPipe
+    InputText
   ],
   templateUrl: './book-recommendation.component.html'
 })
@@ -47,11 +48,17 @@ export class BookRecommendationComponent implements OnInit {
   isLoading = false;
 
   recommendationGenerated: RecommendationOutput[] = [];
+  currentIndex = 0;
+
+  get currentRecommendation(): RecommendationOutput | undefined {
+    return this.recommendationGenerated[this.currentIndex];
+  }
 
   private readonly openAIService = inject(OpenAIService);
   private readonly categoryService = inject(CategoryService);
   private readonly recommendationInputFormService: RecommendationInputFormService = inject(RecommendationInputFormService);
   private readonly alertService = inject(AlertService);
+  private readonly wishListItemService = inject(WishListItemService);
 
   ngOnInit(): void {
     this.form = this.recommendationInputFormService.createRecommendationInputFormGroup();
@@ -69,6 +76,7 @@ export class BookRecommendationComponent implements OnInit {
   }
 
   protected async askRecommendation(): Promise<void> {
+    this.currentIndex = 0;
     this.isLoading = true;
     const recommendationInput = this.recommendationInputFormService.getRecommendationInput(this.form);
     this.openAIService.requestBookRecommendations(recommendationInput).then((recommendations: RecommendationOutput[]) => {
@@ -100,5 +108,47 @@ export class BookRecommendationComponent implements OnInit {
 
   protected forwardInput(): void {
     this.activeStep = this.activeStep + 1;
+  }
+
+  protected prevRecommendation(): void {
+    if (this.recommendationGenerated.length === 0) return;
+    this.currentIndex = Math.max(0, this.currentIndex - 1);
+  }
+
+  protected nextRecommendation(): void {
+    if (this.recommendationGenerated.length === 0) return;
+    this.currentIndex = Math.min(this.recommendationGenerated.length - 1, this.currentIndex + 1);
+  }
+
+  protected resetRecommendations(): void {
+    this.recommendationGenerated = [];
+    this.currentIndex = 0;
+    this.activeStep = 1;
+    this.form.reset();
+    this.filteredCategories = [];
+  }
+
+  protected async saveCurrentRecommendation(): Promise<void> {
+    const rec = this.currentRecommendation;
+    if (!rec) {
+      this.alertService.addAlert('warn', 'No recommendation to save');
+      return;
+    }
+
+    try {
+      await this.wishListItemService.add({
+        title: rec.title,
+        author: rec.author,
+        description: rec.blurb,
+        why: rec.why,
+        notes: undefined,
+        added: false,
+        categoryId: undefined,
+        bookId: undefined
+      });
+    } catch (e) {
+      console.error(e);
+      this.alertService.addAlert('error', 'Failed to save wish list item');
+    }
   }
 }
