@@ -19,6 +19,6 @@ export class NavBarComponent {
     {route: 'my-library', label: 'My Library', icon: 'pi pi-book'},
     {route: 'wish-list', label: 'My Wish List', icon: 'pi pi-shopping-bag'},
     {route: 'category-list', label: 'Categories', icon: 'pi pi-tag'},
-    {route: 'find-book', label: 'Find my Next Book', icon: 'pi pi-search'}
+    {route: 'book-recommendation', label: 'Recommendation', icon: 'pi pi-search'}
   ];
 }

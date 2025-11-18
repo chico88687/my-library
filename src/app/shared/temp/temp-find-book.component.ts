@@ -8,7 +8,7 @@ import {Button, ButtonDirective} from 'primeng/button';
 @Component({
   standalone: true,
   selector: 'app-find-book',
-  templateUrl: './find-book.component.html',
+  templateUrl: './temp-find-book.component.html',
   imports: [
     JsonPipe,
     FormsModule,
@@ -17,7 +17,7 @@ import {Button, ButtonDirective} from 'primeng/button';
     Button
   ]
 })
-export class FindBookComponent {
+export class TempFindBookComponent {
   prompt = 'Hello from my Android app';
   result: any = null;
   error = '';

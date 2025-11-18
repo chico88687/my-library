@@ -1,0 +1,97 @@
+<page-header title="Book Recommendations"/>
+
+
+@if (isLoading) {
+  <div class="flex justify-content-center">
+    <p-progress-spinner strokeWidth="8"
+                        fill="transparent"
+                        animationDuration=".5s"
+                        [style]="{ width: '50px', height: '50px' }"/>
+  </div>
+} @else if (recommendationGenerated.length === 0) {
+  <form [formGroup]="form" (ngSubmit)="askRecommendation()">
+    <div class="p-card mb-3 p-2" style="background-color: #222225; border-radius: 8px;">
+      <div class="flex justify-content-center">
+        <p-stepper [(value)]="activeStep">
+          <p-step-list>
+            <p-step [value]="1">
+              <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <p-button icon="pi pi-tag" [severity]="getSeverity(1)" (onClick)="activateCallback(value)"/>
+              </ng-template>
+            </p-step>
+            <p-step [value]="2">
+              <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <p-button icon="pi pi-heart-fill" [severity]="getSeverity(2)" (onClick)="activateCallback(value)"/>
+              </ng-template>
+            </p-step>
+            <p-step [value]="3">
+              <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <p-button icon="pi pi-thumbs-down-fill" [severity]="getSeverity(3)"
+                          (onClick)="activateCallback(value)"/>
+              </ng-template>
+            </p-step>
+          </p-step-list>
+
+          <p-step-panels>
+            <p-step-panel [value]="1">
+              <ng-template #content let-activateCallback="activateCallback">
+                <div class="flex justify-content-start mb-3">
+                  <span class="text-lg font-semibold">I want to read books from the categories:</span>
+                </div>
+                <div class="col-12">
+                  <p-auto-complete formControlName="categories" inputId="categories"
+                                   multiple fluid
+                                   [suggestions]="filteredCategories"
+                                   (completeMethod)="filterCategories($event)"
+                                   [dropdown]="true"/>
+                </div>
+              </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="2">
+              <ng-template #content let-activateCallback="activateCallback">
+                <div class="grid">
+                  <div class="col-12 flex justify-content-center mb-1">
+                    <span class="text-lg font-semibold">What I'm looking for:</span>
+                  </div>
+                  <div class="col-12">
+                    <textarea id="notes" pTextarea formControlName="bookWith" rows="5" class="w-full"></textarea>
+                  </div>
+                </div>
+              </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="3">
+              <ng-template #content let-activateCallback="activateCallback">
+                <div class="grid">
+                  <div class="col-12 flex justify-content-center mb-1">
+                    <span class="text-lg font-semibold">What I don't want:</span>
+                  </div>
+                  <div class="col-12">
+                    <textarea id="notes" pTextarea formControlName="bookWithout" rows="5" class="w-full"></textarea>
+                  </div>
+                </div>
+              </ng-template>
+            </p-step-panel>
+          </p-step-panels>
+        </p-stepper>
+      </div>
+    </div>
+    <div class="flex justify-content-between">
+      <div class="ml-4">
+        <p-button icon="pi pi-arrow-left" severity="contrast" [disabled]="activeStep === 1"
+                  [outlined]="true" (onClick)="backInput()"/>
+      </div>
+
+      <div class="mr-4">
+        @if (activeStep !== 3) {
+          <p-button icon="pi pi-arrow-right" severity="contrast"
+                    [outlined]="true" (onClick)="forwardInput()"/>
+        } @else {
+          <p-button icon="pi pi-compass" severity="success" type="submit"/>
+        }
+      </div>
+    </div>
+
+  </form>
+} @else {
+  ALO
+}

@@ -106,7 +106,7 @@ export class UpdateBookComponent implements OnInit {
   protected filterCategories(event: AutoCompleteCompleteEvent): void {
     const query = event.query?.toLowerCase() ?? '';
     if (query.length === 0) {
-      this.filteredCategories = this.categories;
+      this.filteredCategories = this.categories.filter(c => this.form.value.category?.name !== c.name);
       return;
     }
     this.filteredCategories = (this.categories || []).filter(category => {

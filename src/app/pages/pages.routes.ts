@@ -2,10 +2,9 @@ import {Routes} from '@angular/router';
 import {MyLibraryComponent} from './my-library/my-library.component';
 import {UpdateBookComponent} from './update-book/update-book.component';
 import {WishesComponent} from './wish-list/wishes.component';
-import {FindBookComponent} from './find-book/find-book.component';
+import {BookRecommendationComponent} from './book-recommendation/book-recommendation.component';
 import {UpdateUserSettingsComponent} from '../shared/update-user-settings/update-user-settings.component';
 import {CategoryListComponent} from './category-list/category-list.component';
-import {DataManagementComponent} from './data-management/data-management.component';
 import {UpdateWishListItemComponent} from './update-wish-list-item/update-wish-list-item.component';
 import {SettingsComponent} from './settings/settings.component';
 
@@ -45,8 +44,8 @@ const routes: Routes = [
     component: CategoryListComponent
   },
   {
-    path: 'find-book',
-    component: FindBookComponent,
+    path: 'book-recommendation',
+    component: BookRecommendationComponent,
   },
   {
     path: 'update-user-settings',
