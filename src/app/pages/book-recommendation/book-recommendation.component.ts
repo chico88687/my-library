@@ -13,6 +13,8 @@ import {PageHeaderComponent} from '../../shared/page-header/page-header.componen
 import {AutoComplete, AutoCompleteCompleteEvent} from 'primeng/autocomplete';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
+import {AlertService} from '../../service/alert/alert.service';
+import {JsonPipe} from '@angular/common';
 
 @Component({
   standalone: true,
@@ -29,7 +31,8 @@ import {Textarea} from 'primeng/textarea';
     AutoComplete,
     FormsModule,
     ReactiveFormsModule,
-    Textarea
+    Textarea,
+    JsonPipe
   ],
   templateUrl: './book-recommendation.component.html'
 })
@@ -48,6 +51,7 @@ export class BookRecommendationComponent implements OnInit {
   private readonly openAIService = inject(OpenAIService);
   private readonly categoryService = inject(CategoryService);
   private readonly recommendationInputFormService: RecommendationInputFormService = inject(RecommendationInputFormService);
+  private readonly alertService = inject(AlertService);
 
   ngOnInit(): void {
     this.form = this.recommendationInputFormService.createRecommendationInputFormGroup();
@@ -64,8 +68,19 @@ export class BookRecommendationComponent implements OnInit {
     return step > this.activeStep ? 'secondary' : 'primary';
   }
 
-  protected askRecommendation(): void {
-
+  protected async askRecommendation(): Promise<void> {
+    this.isLoading = true;
+    const recommendationInput = this.recommendationInputFormService.getRecommendationInput(this.form);
+    this.openAIService.requestBookRecommendations(recommendationInput).then((recommendations: RecommendationOutput[]) => {
+      this.recommendationGenerated = recommendations;
+    })
+      .catch((error) => {
+        this.alertService.addAlert('error', 'Failed to fetch recommendations. Please try again later.');
+        console.error('Failed to fetch recommendations:', error);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   protected filterCategories(event: AutoCompleteCompleteEvent): void {

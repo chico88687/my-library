@@ -27,14 +27,12 @@ export class PromptService {
     const notLookingForSection = recommendationInput.bookWithout || 'None';
 
     // Replace the placeholders in the TEMPLATE
-    const prompt = TEMPLATE
+    return TEMPLATE
       .replace('{libraryBooks}', libraryBooks)
       .replace('{wishListBooks}', wishListBooks)
       .replace('{categorySection}', categorySection)
       .replace('{lookingForSection}', lookingForSection)
       .replace('{notLookingForSection}', notLookingForSection);
-
-    return prompt;
   }
 
   private async getFullLibrary(): Promise<string> {
