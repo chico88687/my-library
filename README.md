@@ -28,6 +28,11 @@ ng generate --help
 
 ## Building
 
+MyLibrary – Personalized Book Manager & Recommender
+
+MyLibrary is a mobile app built with Angular and converted into an Android app using Capacitor. It helps you manage your personal book library, track wish list items, organize categories, and get AI-powered book recommendations tailored just for you.
+
+Angular default README:
 To build the project run:
 
 ```bash
