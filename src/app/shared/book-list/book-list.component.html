@@ -18,7 +18,7 @@
                   <div class="flex justify-content-between align-items-center">
                     <!-- Left-->
                     <div class="flex align-items-center">
-                      <book-avatar/>
+                      <book-avatar [base64Image]="book.bookCover"/>
                       <div class="flex flex-column justify-content-center ml-2">
                         <a class="font-normal text-lg md:text-lg lg:text-xl xl:text-2xl" style="color: inherit;"
                            [routerLink]="'/update-book/' + book.id">

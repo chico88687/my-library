@@ -8,4 +8,7 @@ export interface Book {
   wasRead: boolean;
   categoryId?: number;
   wishId?: number;
+
+  addedDate?: Date;
+  bookCover?: string;
 }

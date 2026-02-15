@@ -32,3 +32,12 @@
   min-width: 4rem;
   max-height: 2rem
 }
+
+.responsive-book-cover img {
+  max-width: 60px; /* or any desired maximum width */
+  max-height: 60px; /* or max height if you want */
+  width: auto;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}

@@ -1,1 +1,5 @@
-<p-avatar [image]="defaultImage" styleClass="mr-2" size="xlarge" />
+@if (showDefaultImage) {
+  <p-avatar [image]="defaultImage" styleClass="mr-2" size="xlarge"/>
+} @else {
+  <p-image [src]="base64Image" class="responsive-book-cover"/>
+}

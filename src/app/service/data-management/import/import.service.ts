@@ -18,6 +18,7 @@ export class ImportService {
 
   async importBooks(file: File): Promise<number> {
     console.log('Importing books from file:', file.name);
+
     // Validate file type
     if (!/\.(csv|txt)$/i.exec(file.name)) {
       this.alertService.addAlert('error', 'Invalid file', 'Only CSV or TXT files are allowed.');
@@ -41,7 +42,10 @@ export class ImportService {
       return 0;
     }
 
-    const requiredHeaders = ['id', 'title', 'author', 'rating', 'notes', 'isFavorite', 'wasRead', 'categoryId', 'wishId'];
+    const requiredHeaders = [
+      'id', 'title', 'author', 'rating', 'notes', 'isFavorite', 'wasRead', 'categoryId', 'wishId',
+      'addedDate', 'bookCover'
+    ];
     const headersValid = requiredHeaders.every(h => result.meta.fields?.includes(h));
     if (!headersValid) {
       this.alertService.addAlert('error', 'Invalid CSV format', 'CSV headers do not match the expected format.');
@@ -58,6 +62,8 @@ export class ImportService {
       wasRead: !!row.wasRead,
       categoryId: row.categoryId ?? undefined,
       wishId: row.wishId ?? undefined,
+      bookCover: row.bookCover ?? undefined,
+      addedDate: row.addedDate ? new Date(row.addedDate) : new Date('2024-01-01'),
     }));
 
     // Get all existing books
@@ -71,7 +77,6 @@ export class ImportService {
           if (existing) {
             await this.bookService.update(book.id, book, false);
           } else {
-            // Preserve provided id by using put (upsert) so Dexie doesn't generate a new one
             await this.bookService.putWithId(book, false);
           }
         } else {
