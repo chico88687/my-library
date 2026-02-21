@@ -44,7 +44,7 @@ export class ImportService {
 
     const requiredHeaders = [
       'id', 'title', 'author', 'rating', 'notes', 'isFavorite', 'wasRead', 'categoryId', 'wishId',
-      'addedDate', 'bookCover'
+      'addedDate', 'finishedReadingDate','bookCover'
     ];
     const headersValid = requiredHeaders.every(h => result.meta.fields?.includes(h));
     if (!headersValid) {
@@ -62,8 +62,9 @@ export class ImportService {
       wasRead: !!row.wasRead,
       categoryId: row.categoryId ?? undefined,
       wishId: row.wishId ?? undefined,
-      bookCover: row.bookCover ?? undefined,
       addedDate: row.addedDate ? new Date(row.addedDate) : new Date('2024-01-01'),
+      finishedReadingDate: row.finishedReadingDate ? new Date(row.finishedReadingDate) : undefined,
+      bookCover: row.bookCover ?? undefined,
     }));
 
     // Get all existing books

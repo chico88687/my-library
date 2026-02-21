@@ -48,6 +48,9 @@ export class ExportService {
         wasRead: book.wasRead,
         categoryId: book.categoryId ?? '',
         wishId: book.wishId ?? '',
+        addedDate: book.addedDate,
+        finishedReadingDate: book.finishedReadingDate,
+        bookCover: book.bookCover ?? ''
       }));
 
       // Convert to CSV using Papa

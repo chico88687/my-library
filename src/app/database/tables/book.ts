@@ -10,5 +10,6 @@ export interface Book {
   wishId?: number;
 
   addedDate?: Date;
+  finishedReadingDate?: Date
   bookCover?: string;
 }

@@ -152,6 +152,7 @@ export class MyLibraryComponent implements OnInit, OnDestroy {
       ['rating', 'Rating'],
       ['isFavorite', 'Favorite'],
       ['wasRead', 'Already Read'],
+      ['addedDate', 'Added Date'],
     ]);
   }
 

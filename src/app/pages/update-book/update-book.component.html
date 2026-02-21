@@ -48,6 +48,18 @@
       </div>
     </div>
 
+    <!--Added Date-->
+    @if (isUpdate) {
+      <div class="col-12">
+        <div class="flex justify-content-start">
+          <div>
+            <label for="addedDate" class="block mb-2">Added Date</label>
+            <p-datePicker id="addedDate" formControlName="addedDate"/>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Rating and wasRead | Favorite-->
     <div class="col-12">
       <div class="flex justify-content-between">
@@ -75,6 +87,20 @@
         </div>
       </div>
     </div>
+
+    <!--Finished Reading Date-->
+    @if (isUpdate) {
+      <div class="col-12">
+        <div class="flex justify-content-start">
+          <div>
+            <label for="finishedReadingDate" class="block mb-2">Finished Reading</label>
+            <p-datePicker id="finishedReadingDate"
+                          formControlName="finishedReadingDate"
+                          [disabled]="form.get('wasRead')?.value === false"/>
+          </div>
+        </div>
+      </div>
+    }
 
     <div class="col-12">
       <label for="notes" class="block mb-2">Notes</label>

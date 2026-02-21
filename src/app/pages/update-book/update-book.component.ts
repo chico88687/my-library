@@ -14,12 +14,13 @@ import {Textarea} from 'primeng/textarea';
 import {Category} from '../../database/tables/category';
 import {CategoryService} from '../../service/database/category.service';
 import {AutoComplete, AutoCompleteCompleteEvent} from 'primeng/autocomplete';
+import {DatePicker} from 'primeng/datepicker';
 
 @Component({
   standalone: true,
   selector: 'update-book',
   templateUrl: './update-book.component.html',
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, BookAvatarComponent, Rating, Textarea, AutoComplete, FormsModule]
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, InputNumberModule, ButtonModule, BookAvatarComponent, Rating, Textarea, AutoComplete, FormsModule, DatePicker]
 })
 export class UpdateBookComponent implements OnInit {
   form!: BookFormGroup;
@@ -94,6 +95,9 @@ export class UpdateBookComponent implements OnInit {
   protected changeWasRead(): void {
     const currentWasRead = this.form.get('wasRead')?.value;
     this.form.patchValue({wasRead: !currentWasRead});
+    if (this.form.get('wasRead')?.value === false) {
+      this.form.patchValue({finishedReadingDate: undefined})
+    }
   }
 
   private initializeCategories(categories: Category[]): void {

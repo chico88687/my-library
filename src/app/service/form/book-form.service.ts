@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Book } from '../../database/tables/book';
-import { Category } from '../../database/tables/category';
+import {Injectable} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Book} from '../../database/tables/book';
+import {Category} from '../../database/tables/category';
 
 // --- Type helpers ---
 type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>> & { id: T['id'] };
@@ -26,6 +26,9 @@ export type BookFormGroupContent = {
   wasRead: FormControl<Book['wasRead']>;
   category: FormControl<Category | null>;
   wishId: FormControl<Book['wishId'] | null>;
+  addedDate: FormControl<Book['addedDate'] | null>;
+  finishedReadingDate: FormControl<Book['finishedReadingDate'] | null>;
+  bookCover: FormControl<Book['bookCover'] | null>;
 };
 
 export type BookFormGroup = FormGroup<BookFormGroupContent>;
@@ -45,6 +48,14 @@ export class BookFormService {
       wasRead: new FormControl(bookRawValue.wasRead, { nonNullable: true }),
       category: new FormControl(bookRawValue.category),
       wishId: new FormControl(bookRawValue.wishId),
+      addedDate: new FormControl(bookRawValue.addedDate),
+      finishedReadingDate: new FormControl(
+        {
+          value: bookRawValue.finishedReadingDate,
+          disabled: !bookRawValue.wasRead
+        }
+      ),
+      bookCover: new FormControl(bookRawValue.bookCover)
     });
   }
 
@@ -52,11 +63,15 @@ export class BookFormService {
     const raw = form.getRawValue();
 
     const rating = raw.rating === null ? undefined : raw.rating;
+    const addedDate = raw.addedDate === null ? undefined : raw.addedDate;
+    const finishedReadingDate = raw.finishedReadingDate === null ? undefined : raw.finishedReadingDate;
+    const bookCover = raw.bookCover === null ? undefined : raw.bookCover;
+
     const categoryId = raw.category ? raw.category.id : undefined;
     const wishId = raw.wishId === null ? undefined : raw.wishId;
 
     if (raw.id === null) {
-      const created: NewBook = {
+      return {
         id: null,
         title: raw.title,
         author: raw.author,
@@ -66,11 +81,12 @@ export class BookFormService {
         wasRead: raw.wasRead,
         categoryId,
         wishId,
+        addedDate: new Date(),
+        bookCover
       };
-      return created;
     }
 
-    const updated: Book = {
+    return {
       id: raw.id as number,
       title: raw.title,
       author: raw.author,
@@ -80,8 +96,10 @@ export class BookFormService {
       wasRead: raw.wasRead,
       categoryId,
       wishId,
+      addedDate,
+      finishedReadingDate,
+      bookCover
     };
-    return updated;
   }
 
   resetForm(form: BookFormGroup, book: BookFormGroupInput, category: Category | null): void {
@@ -97,6 +115,9 @@ export class BookFormService {
       wasRead: bookRawValue.wasRead,
       category: category, // handle both category object or categoryId
       wishId: bookRawValue.wishId,
+      addedDate: bookRawValue.addedDate,
+      finishedReadingDate: bookRawValue.finishedReadingDate,
+      bookCover: bookRawValue.bookCover
     } as any);
   }
 
@@ -111,6 +132,9 @@ export class BookFormService {
       wasRead: false,
       category: null,
       wishId: null,
+      addedDate: null,
+      finishedReadingDate: null,
+      bookCover: null
     } as BookFormDefaults & { title: string; author: string };
   }
 }
